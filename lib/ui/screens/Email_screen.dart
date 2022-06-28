@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../mainscreen.dart';
+
 class MyHomePage extends StatefulWidget {
 //MyHomePage({required Key key, required this.title}) : super(key: key);
 MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -11,7 +13,7 @@ _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  MainScreen ms = new MainScreen();
   void customLaunch(command) async {
     if (await canLaunch(command)) {
       await launch(command);

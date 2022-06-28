@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../griddashboard.dart';
+import '../../mainscreen.dart';
 import '../../services/auth.dart';
 import '../widgets/original_button.dart';
 
 
-
+/*
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -95,15 +96,18 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+*/
 
 
-/*
 class HomeScreen extends StatefulWidget {
   @override
   HomeState createState() => new HomeState();
 }
 
 class HomeState extends State<HomeScreen> {
+
+  MainScreen ms = new MainScreen();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,5 +167,7 @@ class HomeState extends State<HomeScreen> {
   }
 }
 
-*/
+
+
+
 

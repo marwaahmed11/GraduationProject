@@ -1,25 +1,54 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project/ui/screens/Email_screen.dart';
 import 'package:project/ui/screens/Questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/screens/auth_screen.dart';
+import 'package:project/ui/screens/helper_screen.dart';
 import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/intro_screen.dart';
 import 'package:project/ui/screens/location_screen.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'griddashboard.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'mainscreen.dart';
 
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  MainScreen ms = new MainScreen(); ///////////////////////
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  runApp(const MyApp());
+}
+/*
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MyApp());
-}
+}*/
+
 
 class MyApp extends StatelessWidget {
+
+  const MyApp({Key? key}) : super(key: key);
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,44 +83,182 @@ class MyApp extends StatelessWidget {
         'location': (context) => LocationScreen (),
         'email' : (context) => MyHomePage(key: null, title: ''),
         'questionnaire' : (context) => QuestionnairePage(title: ''),
-        'alert' :  (context) => Calendar()
+        'alert' :  (context) => Calendar(),
+        //'notification': (context) => PushNotificationService(),
+       'helper' :  (context) => HelperScreen(),
+
       },
 
     );
   }
 }
 
-//////grid main.dart
-/*
-void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+///////////pdf
+/*
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+import 'addnote.dart';
+import 'editnote.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Food App with Navigation',
+      title: "Student report",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: Colors.cyan
+        primaryColor: Color.fromARGB(255, 0, 11, 133),
       ),
-      home: IntroScreen(),
-      routes: {
-        'intro': (context) => IntroScreen(),
-        'home': (context) => HomeScreen(),
-        'login': (context) => AuthScreen(authType: AuthType.login),
-        'register': (context) => AuthScreen(authType: AuthType.register),
-        'location': (context) => LocationScreen (),
-        'email' : (context) => MyHomePage(key: null, title: ''),
-        'questionnaire' : (context) => QuestionnairePage(title: ''),
-        'alert' :  (context) => Calendar()
-      },
-      /*home: Scaffold(
+      home: Home(),
+    );
+  }
+}
 
-          body: SafeArea(child:  HomeScreen(),)
-      ),*/
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final Stream<QuerySnapshot> _usersStream =
+  FirebaseFirestore.instance.collection('report').snapshots();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        onPressed: () {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => addnote()));
+        },
+        child: Icon(
+          Icons.add,
+        ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        title: Text('Students'),
+      ),
+      body: StreamBuilder(
+        stream: _usersStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("something is wrong");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (_, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            editnote(docid: snapshot.data!.docs[index]),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 3,
+                          right: 3,
+                        ),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          title: Text(
+                            snapshot.data!.docChanges[index].doc['name'],
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
 */
 
 
+////////////////notify
+/*
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+
+        primarySwatch: Colors.blue,
+      ),
+      home: const MainScreen(),
+    );
+  }
+}
+
+*/

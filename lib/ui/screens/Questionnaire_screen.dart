@@ -1,5 +1,7 @@
 import 'package:conditional_questions/conditional_questions.dart';
 
+import '../../mainscreen.dart';
+
 class QuestionnairePage extends StatefulWidget {
   QuestionnairePage({Key? key, required this.title}) : super(key: key);
 
@@ -10,6 +12,9 @@ class QuestionnairePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<QuestionnairePage> {
+
+  MainScreen ms = new MainScreen();
+
   final _key = GlobalKey<QuestionFormState>();
 
   @override

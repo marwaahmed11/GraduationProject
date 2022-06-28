@@ -1,17 +1,32 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-
 import '../../main.dart';
+import '../../mainscreen.dart';
+
+import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
 
 class LocationScreen extends StatefulWidget {
+
   const  LocationScreen({Key? key}) : super(key: key);
   @override
   _HomepageState createState() => _HomepageState();
+
 }
 
 class _HomepageState extends State<LocationScreen>  {
+
+  MainScreen ms = new MainScreen();
+
+
   String location = 'Null, Press Button';
   String Address = 'search';
   Future<Position> _getGeoLocationPosition() async {
@@ -30,11 +45,7 @@ class _HomepageState extends State<LocationScreen>  {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
+
         return Future.error('Location permissions are denied');
       }
     }
@@ -107,3 +118,4 @@ class _HomepageState extends State<LocationScreen>  {
     );
   }
 }
+
