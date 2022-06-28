@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/main.dart';
 import 'package:project/ui/screens/Email_screen.dart';
-import 'package:project/ui/screens/Questionnaire_screen.dart';
+import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/widgets/original_button.dart';
 
@@ -43,7 +43,7 @@ class GridDashboard extends StatelessWidget {
     title: "Helper",
     subtitle: "",
     event: "",
-    screen : 'helper',
+    screen : 'newhelper',
     img: "assets/images/helper.jpg",
   );
   Items item6 = new Items(

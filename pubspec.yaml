@@ -41,6 +41,7 @@ dependencies:
   flutterfire_cli: ^0.2.2+2
   flutter_notification_channel: ^2.0.0
   http: ^0.13.4
+  firebase_database: ^9.0.16
 
 
 

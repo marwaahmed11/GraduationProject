@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../main.dart';
+import '../screens/newhelper_screen.dart';
 
-import 'main.dart';
-/*
+
 class addnote extends StatelessWidget {
   TextEditingController name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
   TextEditingController subject3 = TextEditingController();
 
-  CollectionReference ref = FirebaseFirestore.instance.collection('report');
+  CollectionReference ref = FirebaseFirestore.instance.collection('helpers');
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +21,13 @@ class addnote extends StatelessWidget {
           MaterialButton(
             onPressed: () {
               ref.add({
-                'name': name.text,
-                'Maths': subject1.text,
-                'Science': subject2.text,
-                'History': subject3.text
+                'firstname': name.text,
+                'lastname': subject1.text,
+                'number': subject2.text,
+                'email': subject3.text
               }).whenComplete(() {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => Home()));
+                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
               });
             },
             child: Text(
@@ -40,7 +41,7 @@ class addnote extends StatelessWidget {
           MaterialButton(
             onPressed: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => Home()));
+                  context, MaterialPageRoute(builder: (_) => HelperScreen()));
             },
             child: Text(
               "Back",
@@ -60,7 +61,7 @@ class addnote extends StatelessWidget {
               child: TextField(
                 controller: name,
                 decoration: InputDecoration(
-                  hintText: 'name',
+                  hintText: 'firstname',
                 ),
               ),
             ),
@@ -74,7 +75,7 @@ class addnote extends StatelessWidget {
                 maxLines: null,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'Maths',
+                  hintText: 'lastname',
                 ),
               ),
             ),
@@ -88,7 +89,7 @@ class addnote extends StatelessWidget {
                 maxLines: null,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'Science',
+                  hintText: 'number',
                 ),
               ),
             ),
@@ -102,7 +103,7 @@ class addnote extends StatelessWidget {
                 maxLines: null,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'History',
+                  hintText: 'email',
                 ),
               ),
             ),
@@ -111,5 +112,4 @@ class addnote extends StatelessWidget {
       ),
     );
   }
-}*/
-
+}

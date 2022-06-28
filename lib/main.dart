@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:project/ui/newhelper/addnote.dart';
+import 'package:project/ui/newhelper/editnote.dart';
 import 'package:project/ui/screens/Email_screen.dart';
-import 'package:project/ui/screens/Questionnaire_screen.dart';
+import 'package:project/ui/screens/newhelper_screen.dart';
+import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/screens/auth_screen.dart';
-import 'package:project/ui/screens/helper_screen.dart';
+
 import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/intro_screen.dart';
 import 'package:project/ui/screens/location_screen.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'addnote.dart';
 import 'griddashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +34,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  MainScreen ms = new MainScreen(); ///////////////////////
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const MyApp());
@@ -84,15 +87,14 @@ class MyApp extends StatelessWidget {
         'email' : (context) => MyHomePage(key: null, title: ''),
         'questionnaire' : (context) => QuestionnairePage(title: ''),
         'alert' :  (context) => Calendar(),
-        //'notification': (context) => PushNotificationService(),
-       'helper' :  (context) => HelperScreen(),
+       'newhelper' :  (context) =>HelperScreen(),
+
 
       },
 
     );
   }
 }
-
 
 ///////////pdf
 /*
@@ -224,30 +226,26 @@ class _HomeState extends State<Home> {
 }
 */
 
+////////////////notify//msh 3yznha tani
 
-////////////////notify
 /*
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
+
   await Firebase.initializeApp();
+   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   print('Handling a background message ${message.messageId}');
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -256,9 +254,8 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: const MainScreen(),
+     // home: const MainScreen(),
     );
   }
 }
-
 */

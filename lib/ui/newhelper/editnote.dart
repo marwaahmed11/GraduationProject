@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/main.dart';
 import 'package:flutter/material.dart';
+import '../screens/newhelper_screen.dart';
 
-import 'main.dart';
-import 'report.dart';
-/*
 class editnote extends StatefulWidget {
   DocumentSnapshot docid;
   editnote({required this.docid});
@@ -22,10 +21,10 @@ class _editnoteState extends State<editnote> {
 
   @override
   void initState() {
-    name = TextEditingController(text: widget.docid.get('name'));
-    subject1 = TextEditingController(text: widget.docid.get('Maths'));
-    subject2 = TextEditingController(text: widget.docid.get('Science'));
-    subject3 = TextEditingController(text: widget.docid.get('History'));
+    name = TextEditingController(text: widget.docid.get('firstname'));
+    subject1 = TextEditingController(text: widget.docid.get('lastname'));
+    subject2 = TextEditingController(text: widget.docid.get('number'));
+    subject3 = TextEditingController(text: widget.docid.get('email'));
 
     super.initState();
   }
@@ -39,7 +38,7 @@ class _editnoteState extends State<editnote> {
           MaterialButton(
             onPressed: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => Home()));
+                  context, MaterialPageRoute(builder: (_) => HelperScreen()));
             },
             child: Text(
               "Back",
@@ -52,13 +51,13 @@ class _editnoteState extends State<editnote> {
           MaterialButton(
             onPressed: () {
               widget.docid.reference.update({
-                'name': name.text,
-                'Maths': subject1.text,
-                'Science': subject2.text,
-                'History': subject3.text
+                'firstname': name.text,
+                'lastname': subject1.text,
+                'number': subject2.text,
+                'email': subject3.text
               }).whenComplete(() {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => Home()));
+                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
               });
             },
             child: Text(
@@ -73,7 +72,7 @@ class _editnoteState extends State<editnote> {
             onPressed: () {
               widget.docid.reference.delete().whenComplete(() {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => Home()));
+                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
               });
             },
             child: Text(
@@ -98,7 +97,7 @@ class _editnoteState extends State<editnote> {
                 child: TextField(
                   controller: name,
                   decoration: InputDecoration(
-                    hintText: 'name',
+                    hintText: 'firstname',
                   ),
                 ),
               ),
@@ -112,7 +111,7 @@ class _editnoteState extends State<editnote> {
                   maxLines: null,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'Maths',
+                    hintText: 'lastname',
                   ),
                 ),
               ),
@@ -126,7 +125,7 @@ class _editnoteState extends State<editnote> {
                   maxLines: null,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'Science',
+                    hintText: 'number',
                   ),
                 ),
               ),
@@ -140,14 +139,14 @@ class _editnoteState extends State<editnote> {
                   maxLines: null,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'History',
+                    hintText: 'email',
                   ),
                 ),
               ),
               SizedBox(
                 height: 20,
               ),
-              MaterialButton(
+              /*MaterialButton(
                 color: Color.fromARGB(255, 0, 11, 133),
                 onPressed: () {
                   Navigator.push(
@@ -166,11 +165,11 @@ class _editnoteState extends State<editnote> {
                     color: Color.fromARGB(255, 251, 251, 251),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
       ),
     );
   }
-}*/
+}
