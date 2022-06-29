@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:project/screens/home_screen.dart';
+import 'package:project/screens/login_screen.dart';
 import 'package:project/ui/newhelper/addnote.dart';
 import 'package:project/ui/newhelper/editnote.dart';
 import 'package:project/ui/screens/Email_screen.dart';
+import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/newhelper_screen.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/screens/auth_screen.dart';
 
-import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/intro_screen.dart';
 import 'package:project/ui/screens/location_screen.dart';
 import 'package:conditional_questions/conditional_questions.dart';
@@ -22,6 +24,13 @@ import 'griddashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'mainscreen.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+
+
+import 'package:project/screens/login_screen.dart';
 
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -77,7 +86,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: IntroScreen(),
+      home: LoginScreen(),
      routes: {
         'intro': (context) => IntroScreen(),
         'home': (context) => HomeScreen(),
@@ -257,5 +266,4 @@ class MyApp extends StatelessWidget {
      // home: const MainScreen(),
     );
   }
-}
-*/
+}*/

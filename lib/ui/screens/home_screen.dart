@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../griddashboard.dart';
 import '../../mainscreen.dart';
+import '../../model/user_model.dart';
 import '../../services/auth.dart';
 import '../widgets/original_button.dart';
 import 'package:http/http.dart' as http;
@@ -117,9 +120,22 @@ class HomeState extends State<HomeScreen> {
 
   String? token = " ";
 
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+
+
+
   @override
   void initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
 
     requestPermission();
 
@@ -244,6 +260,9 @@ class HomeState extends State<HomeScreen> {
       );
     }
   }
+
+
+
 
 //////////////
   @override
