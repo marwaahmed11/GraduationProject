@@ -23,9 +23,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: "Helper",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 0, 11, 133),
-      ),
+      /*theme: ThemeData(
+        primaryColor: Color.fromARGB(255, 52, 62, 173),
+      ),*/
       home: HelperScreen(),
     );
   }
@@ -43,7 +43,7 @@ class _HelperScreenState extends State<HelperScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
         onPressed: () {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (_) => addnote()));
@@ -53,7 +53,7 @@ class _HelperScreenState extends State<HelperScreen> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
         title: Text('Helpers'),
       ),
       body: StreamBuilder(

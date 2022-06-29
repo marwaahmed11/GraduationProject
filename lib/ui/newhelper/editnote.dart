@@ -33,7 +33,8 @@ class _editnoteState extends State<editnote> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        title:Text('Edit'),
         actions: [
           MaterialButton(
             onPressed: () {
@@ -61,7 +62,7 @@ class _editnoteState extends State<editnote> {
               });
             },
             child: Text(
-              "save",
+              "Save",
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 251, 251, 251),
@@ -76,7 +77,7 @@ class _editnoteState extends State<editnote> {
               });
             },
             child: Text(
-              "delete",
+              "Delete",
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 251, 251, 251),

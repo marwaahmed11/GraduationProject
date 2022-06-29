@@ -5,7 +5,7 @@ import '../screens/newhelper_screen.dart';
 
 
 class addnote extends StatelessWidget {
-  TextEditingController name = TextEditingController();
+  TextEditingController  name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
   TextEditingController subject3 = TextEditingController();
@@ -16,7 +16,8 @@ class addnote extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        title:Text('Add'),
         actions: [
           MaterialButton(
             onPressed: () {
@@ -31,7 +32,7 @@ class addnote extends StatelessWidget {
               });
             },
             child: Text(
-              "save",
+              "Save",
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 251, 251, 251),
