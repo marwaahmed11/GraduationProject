@@ -5,8 +5,8 @@ import 'package:conditional_questions/conditional_questions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../newhelper/addnote.dart';
-import '../newhelper/editnote.dart';
+import '../newhelper/addhelper.dart';
+import '../newhelper/edithelper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -166,7 +166,7 @@ class _HelperScreenState extends State<HelperScreen> {
         //backgroundColor: Color.fromARGB(255, 0, 11, 133),
         onPressed: () {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => addnote()));
+              context, MaterialPageRoute(builder: (_) => addhelper()));
         },
         child: Icon(
           Icons.add,
@@ -201,7 +201,7 @@ class _HelperScreenState extends State<HelperScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (_) =>
-                            editnote(docid: snapshot.data!.docs[index]),
+                            edithelper(docid: snapshot.data!.docs[index]),
                       ),
                     );
                   },

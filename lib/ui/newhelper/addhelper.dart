@@ -4,7 +4,7 @@ import '../../main.dart';
 import '../screens/newhelper_screen.dart';
 
 
-class addnote extends StatelessWidget {
+class addhelper extends StatelessWidget {
   TextEditingController  name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();

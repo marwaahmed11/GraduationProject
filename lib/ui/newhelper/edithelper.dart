@@ -3,17 +3,17 @@ import 'package:project/main.dart';
 import 'package:flutter/material.dart';
 import '../screens/newhelper_screen.dart';
 
-class editnote extends StatefulWidget {
+class edithelper extends StatefulWidget {
   DocumentSnapshot docid;
-  editnote({required this.docid});
+  edithelper({required this.docid});
 
   @override
-  _editnoteState createState() => _editnoteState(docid: docid);
+  _edithelperState createState() => _edithelperState(docid: docid);
 }
 
-class _editnoteState extends State<editnote> {
+class _edithelperState extends State<edithelper> {
   DocumentSnapshot docid;
-  _editnoteState({required this.docid});
+  _edithelperState({required this.docid});
   TextEditingController name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();

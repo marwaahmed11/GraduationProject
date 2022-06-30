@@ -6,33 +6,29 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project/screens/home_screen.dart';
 import 'package:project/screens/login_screen.dart';
-import 'package:project/ui/newhelper/addnote.dart';
-import 'package:project/ui/newhelper/editnote.dart';
+import 'package:project/ui/newhelper/addhelper.dart';
+import 'package:project/ui/newhelper/edithelper.dart';
 import 'package:project/ui/screens/Email_screen.dart';
 import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/newhelper_screen.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/screens/auth_screen.dart';
-
 import 'package:project/ui/screens/intro_screen.dart';
 import 'package:project/ui/screens/location_screen.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'addnote.dart';
+import 'editnote.dart';
 import 'griddashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'mainscreen.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-
-
 import 'package:project/screens/login_screen.dart';
 
-
+/*
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -104,15 +100,12 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+*/
 ///////////pdf
-/*
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'addnote.dart';
-import 'editnote.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -233,7 +226,7 @@ class _HomeState extends State<Home> {
     );
   }
 }
-*/
+
 
 ////////////////notify//msh 3yznha tani
 
