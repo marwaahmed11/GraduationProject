@@ -245,7 +245,7 @@ class _addnoteState extends State<addnote> {
           MaterialButton(
             onPressed: () {
               ref.add({
-                'name': name.text,
+                'name':  name.text,
                 'question1': _radioBoxValue1,
                 'question2': _radioBoxValue2,
                 'question3': _radioBoxValue3,

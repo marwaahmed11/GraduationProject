@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:project/ui/screens/prediction.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'main.dart';
 import 'report.dart';
@@ -481,6 +482,7 @@ class editnote extends StatefulWidget {
   DocumentSnapshot docid;
   editnote({required this.docid});
 
+
   @override
   _editnoteState createState() => _editnoteState(docid: docid);
 }
@@ -488,6 +490,9 @@ class editnote extends StatefulWidget {
 class _editnoteState extends State<editnote> {
   DocumentSnapshot docid;
   _editnoteState({required this.docid});
+
+
+
 
   String name='';
 
@@ -843,12 +848,34 @@ class _editnoteState extends State<editnote> {
                     MaterialPageRoute(
                       builder: (_) => reportt(
                         docid: docid,
+
                       ),
                     ),
                   );
                 },
                 child: Text(
                   "Make Report",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 251, 251, 251),
+                  ),
+                ),
+              ),
+              MaterialButton(
+                color: Color.fromARGB(255, 0, 11, 133),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => prediction(
+                        docid: docid,
+
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  "Make Prediction",
                   style: TextStyle(
                     fontSize: 20,
                     color: Color.fromARGB(255, 251, 251, 251),
@@ -862,3 +889,5 @@ class _editnoteState extends State<editnote> {
     );
   }
 }
+
+

@@ -13,7 +13,6 @@ import 'package:project/ui/newhelper/edithelper.dart';
 import 'package:project/ui/screens/Email_screen.dart';
 import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/newhelper_screen.dart';
-
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/screens/auth_screen.dart';
@@ -265,6 +264,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }*/
-
-
 

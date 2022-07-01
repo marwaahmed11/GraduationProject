@@ -1,6 +1,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
+import 'package:project/main.dart';
+import 'package:project/ui/screens/prediction.dart';
 import '../../addnote.dart';
 import '../../editnote.dart';
 
@@ -27,7 +29,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       ),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        title: Text('Students'),
+        title: Text('Reports'),
       ),
       body: StreamBuilder(
         stream: _usersStream,
@@ -55,6 +57,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                       MaterialPageRoute(
                         builder: (_) =>
                             editnote(docid: snapshot.data!.docs[index]),
+                        //prediction(docid: snapshot.data!.docs[index]),
                       ),
                     );
                   },
