@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:project/report.dart';
 import 'package:project/screens/home_screen.dart';
 import 'package:project/screens/login_screen.dart';
 import 'package:project/ui/newhelper/addhelper.dart';
@@ -11,6 +13,7 @@ import 'package:project/ui/newhelper/edithelper.dart';
 import 'package:project/ui/screens/Email_screen.dart';
 import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/newhelper_screen.dart';
+
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/screens/auth_screen.dart';
@@ -27,8 +30,10 @@ import 'mainscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project/screens/login_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-/*
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -90,7 +95,7 @@ class MyApp extends StatelessWidget {
         'register': (context) => AuthScreen(authType: AuthType.register),
         'location': (context) => LocationScreen (),
         'email' : (context) => MyHomePage(key: null, title: ''),
-        'questionnaire' : (context) => QuestionnairePage(title: ''),
+        'questionnaire' : (context) => QuestionnaireScreen(),
         'alert' :  (context) => Calendar(),
        'newhelper' :  (context) =>HelperScreen(),
 
@@ -100,9 +105,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-*/
-///////////pdf
 
+///////////pdf
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -226,7 +231,7 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
+*/
 
 ////////////////notify//msh 3yznha tani
 
@@ -260,3 +265,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }*/
+
+
+
