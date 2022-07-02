@@ -299,5 +299,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         (context),
         MaterialPageRoute(builder: (context) => HomeScreen()),
             (route) => false);
+    print(user.uid);
   }
+
+
 }

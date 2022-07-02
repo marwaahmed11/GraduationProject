@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/ui/screens/prediction.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
-import 'main.dart';
+import '../../main.dart';
 import 'report.dart';
 /*
 class editnote extends StatefulWidget {
@@ -490,8 +490,6 @@ class editnote extends StatefulWidget {
 class _editnoteState extends State<editnote> {
   DocumentSnapshot docid;
   _editnoteState({required this.docid});
-
-
 
 
   String name='';
