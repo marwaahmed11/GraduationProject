@@ -23,6 +23,7 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _HomepageState extends State<LocationScreen>  {
+  _HomepageState(){fun();}
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -32,6 +33,7 @@ class _HomepageState extends State<LocationScreen>  {
   @override
   void initState() {
     super.initState();
+    fun();
 
     requestPermission();
 
@@ -198,6 +200,16 @@ class _HomepageState extends State<LocationScreen>  {
     setState(() {});
   }
 
+  void fun() async
+  {
+    Position position = await _getGeoLocationPosition();
+    location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
+    GetAddressFromLatLong(position);
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,13 +242,13 @@ class _HomepageState extends State<LocationScreen>  {
               height: 10,
             ),
             Text('${Address}'),
-            ElevatedButton(
+           /* ElevatedButton(
                 onPressed: () async {
                   Position position = await _getGeoLocationPosition();
                   location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
                   GetAddressFromLatLong(position);
                 },
-                child: Text('Get Location')),
+                child: Text('Get Location')),*/
             Hero(
               tag: 'logoAnimation',
               child: Image.asset(

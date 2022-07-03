@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:project/report.dart';
-import 'package:project/screens/home_screen.dart';
-import 'package:project/screens/login_screen.dart';
+import 'package:project/ui/report/report.dart';
+import 'package:project/ui/screens/login_screen.dart';
 import 'package:project/ui/newhelper/addhelper.dart';
 import 'package:project/ui/newhelper/edithelper.dart';
-import 'package:project/ui/screens/Email_screen.dart';
+import 'package:project/ui/screens/email_screen.dart';
 import 'package:project/ui/screens/home_screen.dart';
 import 'package:project/ui/screens/newhelper_screen.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
@@ -20,15 +21,15 @@ import 'package:project/ui/screens/intro_screen.dart';
 import 'package:project/ui/screens/location_screen.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'addnote.dart';
-import 'editnote.dart';
+import 'ui/report/addreport.dart';
+import 'ui/report/showreport.dart';
 import 'griddashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'mainscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project/screens/login_screen.dart';
+import 'package:project/ui/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +61,6 @@ class MyApp extends StatelessWidget {
 
   const MyApp({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -88,22 +88,23 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginScreen(),
      routes: {
-        'intro': (context) => IntroScreen(),
+        //'intro': (context) => IntroScreen(),
         'home': (context) => HomeScreen(),
-        'login': (context) => AuthScreen(authType: AuthType.login),
-        'register': (context) => AuthScreen(authType: AuthType.register),
+        //'login': (context) => AuthScreen(authType: AuthType.login),
+        //'register': (context) => AuthScreen(authType: AuthType.register),
         'location': (context) => LocationScreen (),
         'email' : (context) => MyHomePage(key: null, title: ''),
         'questionnaire' : (context) => QuestionnaireScreen(),
         'alert' :  (context) => Calendar(),
        'newhelper' :  (context) =>HelperScreen(),
 
-
       },
 
     );
   }
 }
+
+
 
 ///////////pdf
 /*
@@ -264,4 +265,73 @@ class MyApp extends StatelessWidget {
     );
   }
 }*/
+
+///////////////////////////////////////////////////////
+/*
+
+
+class AddCollection extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: TextButton(
+                child: const Text('Add Collection'),
+                onPressed: ()
+                {
+                  ApiServices services = ApiServices();
+                  services.addCollection();
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+
+  }
+}
+
+
+class ApiServices
+{
+
+  Future<String?> addCollection( )async{
+    CollectionReference users=FirebaseFirestore.instance.collection('newuser');
+    var result = await users.add({
+      'id':'14526',
+      'name' : "snushs"
+    });
+    await addMultipleCollections (
+        id: result.id
+    );
+    return 'Created';
+  }
+
+  Future<String?> addMultipleCollections({String? id })async{
+
+    CollectionReference users=FirebaseFirestore.instance.collection('newuser');
+    users.doc(id).collection('newhelper').add({
+      'id':id,
+      'Created_at' : DateTime.now()
+    });
+    return 'success';
+
+  }
+
+}
+*/
+
+
+
+
+
+
 

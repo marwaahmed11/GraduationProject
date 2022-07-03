@@ -478,18 +478,18 @@ class _editnoteState extends State<editnote> {
     );
   }
 }*/
-class editnote extends StatefulWidget {
+class showreport extends StatefulWidget {
   DocumentSnapshot docid;
-  editnote({required this.docid});
+  showreport({required this.docid});
 
 
   @override
-  _editnoteState createState() => _editnoteState(docid: docid);
+  _showreportState createState() => _showreportState(docid: docid);
 }
 
-class _editnoteState extends State<editnote> {
+class _showreportState extends State<showreport> {
   DocumentSnapshot docid;
-  _editnoteState({required this.docid});
+  _showreportState({required this.docid});
 
 
   String name='';

@@ -3,7 +3,7 @@ import '../screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:project/ui/widgets/original_button.dart';
 
-
+/*
 class AuthForm extends StatefulWidget {
   final AuthType authType;
   const AuthForm({Key? key,  required this.authType}) : super(key: key);
@@ -108,6 +108,6 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 }
-
+*/
 
 

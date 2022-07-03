@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart';
+import '../../model/user_model.dart';
 import '../screens/newhelper_screen.dart';
 
 
@@ -9,6 +11,14 @@ class addhelper extends StatelessWidget {
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
   TextEditingController subject3 = TextEditingController();
+  //TextEditingController uid = TextEditingController();
+  String uid;
+  //UserModel userModel = UserModel();
+  //addhelper({required UserModel uid});
+  addhelper({required this.uid});
+
+  //User? user = FirebaseAuth.instance.currentUser;
+
 
   CollectionReference ref = FirebaseFirestore.instance.collection('helpers');
 
@@ -22,6 +32,7 @@ class addhelper extends StatelessWidget {
           MaterialButton(
             onPressed: () {
               ref.add({
+                'uid': uid,
                 'firstname': name.text,
                 'lastname': subject1.text,
                 'number': subject2.text,
@@ -57,6 +68,16 @@ class addhelper extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+           /* Container(
+              //decoration: BoxDecoration(border: Border.all()),
+              child: TextField(
+                controller: uid,
+               /* decoration: InputDecoration(
+                  hintText: 'firstname',
+                ),*/
+              ),
+            ),*/
+
             Container(
               decoration: BoxDecoration(border: Border.all()),
               child: TextField(
@@ -113,4 +134,6 @@ class addhelper extends StatelessWidget {
       ),
     );
   }
+
+
 }

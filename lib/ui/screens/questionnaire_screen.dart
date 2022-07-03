@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:project/main.dart';
 import 'package:project/ui/screens/prediction.dart';
-import '../../addnote.dart';
-import '../../editnote.dart';
+import '../report/addreport.dart';
+import '../report/showreport.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         backgroundColor: Color.fromARGB(255, 0, 11, 133),
         onPressed: () {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => addnote()));
+              context, MaterialPageRoute(builder: (_) => addreport()));
         },
         child: Icon(
           Icons.add,
@@ -56,7 +56,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (_) =>
-                            editnote(docid: snapshot.data!.docs[index]),
+                            showreport(docid: snapshot.data!.docs[index]),
                         //prediction(docid: snapshot.data!.docs[index]),
                       ),
                     );

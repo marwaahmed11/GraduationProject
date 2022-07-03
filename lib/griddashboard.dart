@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/main.dart';
-import 'package:project/ui/screens/Email_screen.dart';
+import 'package:project/ui/screens/email_screen.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import 'package:project/ui/screens/alert_screen.dart';
 import 'package:project/ui/widgets/original_button.dart';

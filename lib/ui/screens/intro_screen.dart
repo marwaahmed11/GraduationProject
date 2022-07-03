@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 
 import '../widgets/original_button.dart';
@@ -39,3 +40,4 @@ class IntroScreen extends StatelessWidget {
 }
 
 
+*/

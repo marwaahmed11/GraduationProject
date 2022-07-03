@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:project/report.dart';
+import 'package:project/ui/report/report.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
-import 'main.dart';
+import '../../main.dart';
 /*
 class addnote extends StatelessWidget {
   TextEditingController name = TextEditingController();
@@ -204,16 +204,16 @@ class addnote extends StatelessWidget {
 
 */
 
-class addnote extends StatefulWidget {
+class addreport extends StatefulWidget {
 
   @override
-  _addnoteState createState() => _addnoteState();
+  _addreportState createState() => _addreportState();
 }
 
-class _addnoteState extends State<addnote> {
+class _addreportState extends State<addreport> {
 
 
-  _addnoteState();
+  _addreportState();
   @override
   void initState() {
 
