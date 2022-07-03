@@ -406,30 +406,10 @@ class _HelperScreenState extends State<HelperScreen> {
       );
     }
   }
-
   //widget.String.get(uid);
 
   final Stream<QuerySnapshot> _usersStream =
   FirebaseFirestore.instance.collection('helpers').snapshots();
-
-
-/*
-  List list ;
-  Future getDocs() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("collection").get();
-    for (int i = 0; i < querySnapshot.size; i++) {
-      var a = querySnapshot.docChanges[i].doc['uid'];
-      if (a==uid)
-        {
-          list.add(querySnapshot.docChanges[i]);
-        }
-    }
-  }
-
-  final QuerySnapshot _usersStream =list ;
-*/
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -460,37 +440,26 @@ class _HelperScreenState extends State<HelperScreen> {
               child: CircularProgressIndicator(),
             );
           }
-
-
-
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListView.builder(
-                itemCount: snapshot.data!.size,
-
-             // int index =snapshot.data!.size;
+              itemCount: snapshot.data!.size,
               itemBuilder: (_, index) {
-
-                  /*print(index);
-                  print(snapshot.data!.size);
-                  //DocumentSnapshot docid =  snapshot.data!.docs[index];
-                  print(snapshot.data!.docs[index].get('uid'));
-                  //print(snapshot.data!.docChanges[index].doc['uid']);
-                  print(snapshot.data!.docChanges[index].doc['firstname']);*/
-                 /* if (snapshot.data!.docs[index].get('uid') == uid) {
-                    print("helloooooooooooooooo");*/
+                  if (snapshot.data!.docs[index].get('uid') == uid) {
+                    print("helloooooooooooooooo");
                   return GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                edithelper(
-                                    docid: snapshot.data!.docs[index], uid: uid),
-                          ),
-                        );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    edithelper(
+                                        docid: snapshot.data!.docs[index],
+                                        uid: uid),
+                              ),
+                            );
                       },
                       child: Column(
                         children: [
@@ -519,21 +488,22 @@ class _HelperScreenState extends State<HelperScreen> {
                                 vertical: 12,
                                 horizontal: 16,
                               ),
-
                             ),
                           ),
                         ],
                       ),
                     );
-                 /* }
-                  else {
-                    print("hello2222");
-                    return GestureDetector();
-
-                  }*/
+                 }//if
+                  else{
+                    return GestureDetector(
+                      child: Column(
+                        children: [
+                        ],
+                      ),
+                    );
+                  }
              },
             ),
-
           );
         },
       ),
