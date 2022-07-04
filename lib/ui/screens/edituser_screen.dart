@@ -1,40 +1,42 @@
+
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conditional_questions/conditional_questions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../../main.dart';
-import '../../model/user_model.dart';
-import '../screens/newhelper_screen.dart';
+import 'package:project/ui/screens/home_screen.dart';
+/*
+class editUserScreen extends StatefulWidget {
+  editUserScreen();
 
-
-class addhelper extends StatefulWidget {
-
-  String uid;
- addhelper({required this.uid});
   @override
-  _addhelperState createState() => _addhelperState(uid:uid);
+  _edituserState createState() => _edituserState();
 }
 
+class _edituserState extends State<editUserScreen> {
 
+  String a = '';
+  late DocumentSnapshot uid;
+  _edituserState();
 
-class  _addhelperState extends State<addhelper> {
-  TextEditingController  name = TextEditingController();
+  TextEditingController name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
-  TextEditingController subject3 = TextEditingController();
-  //TextEditingController uid = TextEditingController();
-  String uid;
-  //UserModel userModel = UserModel();
-  //addhelper({required UserModel uid});
-  _addhelperState({required this.uid});
+  TextEditingController toEmail = TextEditingController();
 
-  //User? user = FirebaseAuth.instance.currentUser;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  void getCurrentUser() async {
 
-  CollectionReference ref = FirebaseFirestore.instance.collection('helpers');
+    User? user = await _auth.currentUser;
+    a = user!.uid;
+   uid= fetchCurrentUser(a) as DocumentSnapshot<Object?>;
+  }
+  Future<DocumentSnapshot> fetchCurrentUser(String uuid) async {
+    return await FirebaseFirestore.instance.collection('users').doc(uuid).get();
+
+  }
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -42,7 +44,17 @@ class  _addhelperState extends State<addhelper> {
   String? token = " ";
 
   @override
-  void initState() {
+  void initState() async {
+    User? user = await _auth.currentUser;
+    a = user!.uid;
+    DocumentSnapshot uid=await FirebaseFirestore.instance.collection('users').doc(a).get();
+
+
+    name = TextEditingController(text: widget.uid.get('firstname'));
+    subject1 = TextEditingController(text: widget.docid.get('lastname'));
+    subject2 = TextEditingController(text: widget.docid.get('number'));
+    toEmail = TextEditingController(text: widget.docid.get('email'));
+
     super.initState();
 
     requestPermission();
@@ -155,10 +167,6 @@ class  _addhelperState extends State<addhelper> {
 
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-      /// Create an Android Notification Channel.
-      ///
-      /// We use this channel in the `AndroidManifest.xml` file to override the
-      /// default FCM channel to enable heads up notifications.
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
@@ -175,22 +183,34 @@ class  _addhelperState extends State<addhelper> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         //backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        title:Text('Add'),
+        title:Text('Edit'),
         actions: [
           MaterialButton(
             onPressed: () {
-              ref.add({
-                'uid': uid,
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => HomeScreen()));
+            },
+            child: Text(
+              "Back",
+              style: TextStyle(
+                fontSize: 20,
+                color: Color.fromARGB(255, 251, 251, 251),
+              ),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () {
+              widget.uid.reference.update({
                 'firstname': name.text,
                 'lastname': subject1.text,
                 'number': subject2.text,
-                'email': subject3.text
+                'email': toEmail.text
               }).whenComplete(() {
                 Navigator.pushReplacement(
                     context, MaterialPageRoute(builder: (_) => HelperScreen()));
@@ -206,11 +226,13 @@ class  _addhelperState extends State<addhelper> {
           ),
           MaterialButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => HelperScreen()));
+              widget.docid.reference.delete().whenComplete(() {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
+              });
             },
             child: Text(
-              "Back",
+              "Delete",
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 251, 251, 251),
@@ -220,64 +242,86 @@ class  _addhelperState extends State<addhelper> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: name,
-                decoration: InputDecoration(
-                  hintText: 'firstname',
+        child: Container(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                child: TextField(
+                  controller: name,
+                  decoration: InputDecoration(
+                    hintText: 'firstname',
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject1,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'lastname',
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                child: TextField(
+                  controller: subject1,
+                  maxLines: null,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: 'lastname',
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject2,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'number',
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                child: TextField(
+                  controller: subject2,
+                  maxLines: null,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: 'number',
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject3,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'email',
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                child: TextField(
+                  controller: toEmail,
+                  maxLines: null,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: 'email',
+                  ),
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 20,
+              ),
+              //Text('${Address}'),
+              ElevatedButton(
+                  onPressed: () async{
+                    getlocation();
+                    String number = subject2.text;
+                    String x = name.text+",please help me in this location "+Address;
+                    final url='sms:$number?body=$x';
+                    customLaunch(url);
+                  },
+
+                  child: Text('Send Location')),
+              //Text('${Address}'),
+
+            ],
+          ),
         ),
       ),
     );
   }
-}
 
+}
+*/
 

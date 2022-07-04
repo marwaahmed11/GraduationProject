@@ -50,7 +50,7 @@ class GridDashboard extends StatelessWidget {
     title: "Settings",
     subtitle: "",
     event: "2 Items",
-    screen : 'alert',
+    screen : 'settings',
     img: "assets/images/setting.png",
   );
 

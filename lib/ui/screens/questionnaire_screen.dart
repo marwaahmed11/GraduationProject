@@ -1,6 +1,6 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/main.dart';
 import 'package:project/ui/screens/prediction.dart';
 import '../report/addreport.dart';
@@ -12,23 +12,39 @@ class QuestionnaireScreen extends StatefulWidget {
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
+
+  String uid='';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  void getCurrentUser() async {
+    User? user = await _auth.currentUser;
+    uid = user!.uid;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
   final Stream<QuerySnapshot> _usersStream =
   FirebaseFirestore.instance.collection('report').snapshots();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        backgroundColor: Colors.blueAccent,
         onPressed: () {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => addreport()));
+              context, MaterialPageRoute(builder: (_) => addreport(uid:uid)));
         },
         child: Icon(
           Icons.add,
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        backgroundColor: Colors.blueAccent,
         title: Text('Reports'),
       ),
       body: StreamBuilder(
@@ -48,51 +64,61 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListView.builder(
-              itemCount: snapshot.data!.docs.length,
+              itemCount: snapshot.data!.size,
               itemBuilder: (_, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            showreport(docid: snapshot.data!.docs[index]),
-                        //prediction(docid: snapshot.data!.docs[index]),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 3,
-                          right: 3,
+                if (snapshot.data!.docs[index].get('uid') == uid) {
+                  print("helloooooooooooooooo");
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              showreport(docid: snapshot.data!.docs[index],uid:uid),
                         ),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(
-                              color: Colors.black,
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 3,
+                            right: 3,
+                          ),
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                            title: Text(
+                              snapshot.data!.docChanges[index].doc['date'],
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 16,
                             ),
                           ),
-                          title: Text(
-                            snapshot.data!.docChanges[index].doc['name'],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 16,
-                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
+                      ],
+                    ),
+                  );
+                }//if
+                else{
+                  return GestureDetector(
+                    child: Column(
+                      children: [
+                      ],
+                    ),
+                  );
+                }
               },
             ),
           );
@@ -101,3 +127,4 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     );
   }
 }
+

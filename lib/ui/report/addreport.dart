@@ -1,8 +1,15 @@
+import 'dart:convert';
+import 'package:date_format/date_format.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:project/ui/report/report.dart';
 import 'package:project/ui/screens/questionnaire_screen.dart';
 import '../../main.dart';
+import 'package:http/http.dart' as http;
 /*
 class addnote extends StatelessWidget {
   TextEditingController name = TextEditingController();
@@ -114,125 +121,172 @@ class addnote extends StatelessWidget {
   }
 }
 */
-/*
-class addnote extends StatelessWidget {
-
-  CollectionReference ref = FirebaseFirestore.instance.collection('report');
-
-  int group =1;
-
-  TextEditingController name= TextEditingController();
-  TextEditingController subject2 = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        actions: [
-          MaterialButton(
-            onPressed: () {
-
-              ref.add({
-                'name': subject2.text,
-                'question2': subject2.text,
-
-              }).whenComplete(() {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => Home()));
-              });
-            },
-            child: Text(
-              "save",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),
-          MaterialButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => Home()));
-            },
-            child: Text(
-              "Back",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject2,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Do you suffer from loss of appetite?"
-                      "هل تعاني من فقدان الشهية؟",
-                ),
-              ),
-            ),
-
-            RadioListTile(
-                title: const Text('None'),
-                value: 'None',
-                groupValue: subject2,
-                onChanged: (TextEditingController value) {
-                  //setState(() {
-                   subject2 = value;
-               //   });
-                  //_showToast('Changed value of Radio[Box] to $value');
-                }),
-
-
-
-
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-*/
 
 class addreport extends StatefulWidget {
 
+  String uid;
+  addreport({required this.uid});
   @override
-  _addreportState createState() => _addreportState();
+  _addreportState createState() => _addreportState(uid:uid);
 }
 
 class _addreportState extends State<addreport> {
 
+  String uid;
+  _addreportState({required this.uid});
 
-  _addreportState();
+  late AndroidNotificationChannel channel;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  String? token = " ";
+
   @override
   void initState() {
-
     super.initState();
+
+    requestPermission();
+
+    loadFCM();
+
+    listenFCM();
+
+    getToken();
+
+    FirebaseMessaging.instance.subscribeToTopic("Animal");
+
+    sendPushMessage();
   }
+
+  void sendPushMessage() async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAAwyqJYMY:APA91bE_gBwYDgr9-puMHLyY6s5OTowlcv62FPi4XRdUqAPivmF8MX4TMtAzNifUwIDEn0CiqXcoJfglYpYcTqWnQbzXzqfd1JeBHlLQnnu1MHGEO6uovuKuzsI6ASKqGoeH5VwDJhyQ',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': 'Test Body',
+              'title': 'Test Title 2'
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'id': '1',
+              'status': 'done'
+            },
+            "to": "$token",
+          },
+        ),
+      );
+      print("heyyyyyyyyyyyyyyyyyyyy");
+    } catch (e) {
+      print("error push notification");
+    }
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then(
+            (token) {
+          setState(() {
+            token = token;
+          });
+        }
+      //(token) => print(token)
+    );
+  }
+
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  void listenFCM() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  void loadFCM() async {
+    if (!kIsWeb) {
+      channel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        importance: Importance.high,
+        enableVibration: true,
+      );
+
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  }
+
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //////////////////////////////////////////////
   //String name='';
   TextEditingController name = TextEditingController();
-  String? _radioBoxValue1 = '';
-  String? _radioBoxValue2 = '';
-  String? _radioBoxValue3 = '';
-  String? _radioBoxValue4 = '';
-  String? _radioBoxValue5 = '';
-  String? _radioBoxValue6 = '';
-  String? _radioBoxValue7 = '';
-  String? _radioBoxValue8 = '';
-  String? _radioBoxValue9 = '';
-  String? _radioBoxValue10 = '';
+  String?  _radioBoxValue1 = 'None';
+  String? _radioBoxValue2 = 'None';
+  String? _radioBoxValue3 = 'None';
+  String? _radioBoxValue4 = 'None';
+  String? _radioBoxValue5 = 'None';
+  String? _radioBoxValue6 = 'None';
+  String? _radioBoxValue7 = 'None';
+  String? _radioBoxValue8 = 'None';
+  String? _radioBoxValue9 = 'None';
+  String? _radioBoxValue10 = 'None';
+  String? _radioBoxValue11 = 'None';
+
+  String date = DateFormat.yMMMd().format(DateTime.now());
+
+
   CollectionReference ref = FirebaseFirestore.instance.collection('report');
 
   @override
@@ -240,11 +294,14 @@ class _addreportState extends State<addreport> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        backgroundColor: Colors.blueAccent,
+        title: Text("Add Report"),
         actions: [
           MaterialButton(
             onPressed: () {
               ref.add({
+                'date':date,
+                'uid' :uid,
                 'name':  name.text,
                 'question1': _radioBoxValue1,
                 'question2': _radioBoxValue2,
@@ -255,7 +312,8 @@ class _addreportState extends State<addreport> {
                 'question7': _radioBoxValue7,
                 'question8': _radioBoxValue8,
                 'question9': _radioBoxValue9,
-                'question10': _radioBoxValue10
+                'question10': _radioBoxValue10,
+                'question11': _radioBoxValue11
 
               }).whenComplete(() {
                 Navigator.pushReplacement(
@@ -319,7 +377,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue1 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
@@ -329,7 +387,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue1 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
@@ -340,7 +398,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue1 = value.toString();
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
@@ -359,7 +417,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue2 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
@@ -369,7 +427,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue2 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
@@ -380,7 +438,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue2 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
@@ -639,7 +697,7 @@ class _addreportState extends State<addreport> {
                       setState(() {
                         _radioBoxValue9 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
@@ -701,6 +759,51 @@ class _addreportState extends State<addreport> {
                         _radioBoxValue10 = value;
                       });
                       _showToast('Changed value of Radio[Box] to $value');
+                    }),
+              ],
+            ),
+            // TextField
+            // DateTimePicker
+            SizedBox(
+              height: 50,
+            ),
+            _SpaceLine(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _GroupText("Do you suffer from nerve damage?"
+                    "هل تعاني من تلف الاعصاب؟"),
+                RadioListTile(
+                    title: const Text('None'),
+                    value: 'None',
+                    groupValue: _radioBoxValue11,
+                    onChanged: (String? value) {
+                      setState(() {
+                        _radioBoxValue11 = value;
+                      });
+                      _showToast('Changed value to $value');
+                    }),
+                RadioListTile(
+                    title: const Text('Mid'),
+                    value: 'Mid',
+                    groupValue: _radioBoxValue11,
+                    onChanged: (String? value) {
+                      setState(() {
+                        _radioBoxValue11 = value;
+                      });
+                      _showToast('Changed value to $value');
+                    }),
+
+                RadioListTile(
+                    title: const Text('Severe'),
+                    value: 'Severe',
+                    groupValue: _radioBoxValue11,
+                    onChanged: (String? value) {
+                      setState(() {
+                        _radioBoxValue11 = value;
+                      });
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),

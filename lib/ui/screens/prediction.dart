@@ -129,34 +129,40 @@ class _predictionState extends State<prediction> {
     String  out='';
     final listMap = x.asMap();
     for(int i=0;i<x.length;i++){
-      out = out+ listMap[i].toString()+"\n";
+      out =out+ listMap[i].toString()+"\n\n";
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: new AppBar(
+        title: new Text('Prediction'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Stack(
               children: <Widget>[
 
-                Center(
+                Container(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 65),
-                      Text(
-                        out,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20),
-                      ),
-
+                      SizedBox(height: 20),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child : Text( out,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20),),
+                    ),
                     ],
                   ),
                 ),
+                /////////////////////////////////////////
+
               ],
             ),
           ],
+
         ),
       ),
 

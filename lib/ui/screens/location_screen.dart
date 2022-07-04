@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
+import 'home_screen.dart';
+
 
 class LocationScreen extends StatefulWidget {
 
@@ -212,6 +214,7 @@ class _HomepageState extends State<LocationScreen>  {
 
   @override
   Widget build(BuildContext context) {
+    fun();
     return Scaffold(
       appBar: new AppBar(
         title: new Text('Location'),
@@ -242,13 +245,19 @@ class _HomepageState extends State<LocationScreen>  {
               height: 10,
             ),
             Text('${Address}'),
-           /* ElevatedButton(
+           ElevatedButton(
                 onPressed: () async {
                   Position position = await _getGeoLocationPosition();
                   location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
                   GetAddressFromLatLong(position);
+                  Navigator.pushAndRemoveUntil(
+                      (context),
+                      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                          (route) => false);
                 },
-                child: Text('Get Location')),*/
+
+                child: Text('Access Location')),
             Hero(
               tag: 'logoAnimation',
               child: Image.asset(

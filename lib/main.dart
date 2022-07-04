@@ -21,6 +21,7 @@ import 'package:project/ui/screens/intro_screen.dart';
 import 'package:project/ui/screens/location_screen.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/ui/screens/setting_screen.dart';
 import 'ui/report/addreport.dart';
 import 'ui/report/showreport.dart';
 import 'griddashboard.dart';
@@ -97,6 +98,7 @@ class MyApp extends StatelessWidget {
         'questionnaire' : (context) => QuestionnaireScreen(),
         'alert' :  (context) => Calendar(),
        'newhelper' :  (context) =>HelperScreen(),
+       'settings' :  (context) =>SettingPage(title: '',),
 
       },
 

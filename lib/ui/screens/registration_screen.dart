@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../model/user_model.dart';
 import 'home_screen.dart';
+import 'location_screen.dart';
 
 
 class RegistrationScreen extends StatefulWidget {
@@ -298,7 +299,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     Navigator.pushAndRemoveUntil(
         (context),
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+     //   MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => LocationScreen()),
             (route) => false);
     print(user.uid);
   }
