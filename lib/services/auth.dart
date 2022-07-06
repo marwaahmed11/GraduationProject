@@ -41,7 +41,7 @@ class AuthBase {
 }
 */
 
-
+/*
 class Person {
   final String uid;
   Person({required this.uid});
@@ -80,3 +80,4 @@ class AuthBase {
     await FirebaseAuth.instance.signOut();
   }
 }
+*/

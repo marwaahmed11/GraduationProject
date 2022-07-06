@@ -1,14 +1,13 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:project/ui/screens/prediction.dart';
-import 'package:project/ui/screens/questionnaire_screen.dart';
+import 'package:project/ui/report/prediction.dart';
+import 'package:project/ui/screens/symptom_screen.dart';
 import '../../main.dart';
-import '../screens/advice_screen.dart';
+import 'advice_screen.dart';
 import 'report.dart';
 import 'package:http/http.dart' as http;
 /*
@@ -367,6 +366,55 @@ class _showreportState extends State<showreport> {
     }
   }
 
+  void actionPopUpItemSelected(String value, String name) {
+    String message;
+    if (value == 'report') {
+      message = 'You selected edit for $name';
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => reportt(
+              docid: docid,uid:uid
+          ),
+        ),
+      );
+
+
+      // You can navigate the user to edit page.
+    } else if (value == 'prediction') {
+      message = 'You selected delete for $name';
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => prediction(
+            docid: docid,
+
+          ),
+        ),
+      );
+    }
+    else if (value == 'advice') {
+      message = 'You selected delete for $name';
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AdviceScreen(docid :docid),
+        ),
+      );
+    }
+    else if (value == 'delete') {
+      message = 'You selected delete for $name';
+      widget.docid.reference.delete().whenComplete(() {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
+      });
+
+    }else {
+      message = 'Not implemented';
+    }
+    print(message);
+  }
+
 
 
 /*  @override
@@ -388,18 +436,29 @@ class _showreportState extends State<showreport> {
 
   @override
   Widget build(BuildContext context) {
+    int group =1;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
         title: Text(
           "Show Report",
           style: TextStyle(
             fontSize: 20,
-            color: Color.fromARGB(255, 251, 251, 251),
+            color: Colors.white,
           ),
+
         ),
+        backgroundColor: Colors.pink[200],
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
+
+          },
+        ),
+        automaticallyImplyLeading: false,
         actions: [
-          MaterialButton(
+          /*MaterialButton(
             onPressed: () {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
@@ -412,7 +471,8 @@ class _showreportState extends State<showreport> {
               ),
             ),
 
-          ),
+          ),*/
+
           /* MaterialButton(
             onPressed: () {
               widget.docid.reference.update({
@@ -461,7 +521,7 @@ class _showreportState extends State<showreport> {
               ),
             ),
           ),*/
-          MaterialButton(
+         /* MaterialButton(
             onPressed: () {
               widget.docid.reference.delete().whenComplete(() {
                 Navigator.pushReplacement(
@@ -475,6 +535,31 @@ class _showreportState extends State<showreport> {
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
+          ),*/
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  value: 'report',
+                    child: Text('Make Report'),
+                ),
+                PopupMenuItem(
+                  value: 'prediction',
+                  child: Text('Make Prediction'),
+                ),
+                PopupMenuItem(
+                  value: 'advice',
+                  child: Text('Show Advice'),
+                ),                PopupMenuItem(
+                  value: 'delete',
+                  child: Text('Delete Report'),
+                )
+              ];
+            },
+            onSelected: (String value){
+              print('You Click on po up menu item');
+              actionPopUpItemSelected(value, name);
+            },
           ),
         ],
       ),
@@ -564,7 +649,6 @@ class _showreportState extends State<showreport> {
                   color: Colors.black,
                   width: 1,
                 ),),
-
                 child:  Text(
                   subject1,
                   style: TextStyle(
@@ -860,8 +944,8 @@ class _showreportState extends State<showreport> {
               ),
 
 
-              MaterialButton(
-                color: Colors.blueAccent,
+            /*  MaterialButton(
+                color: Colors.blue,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -881,7 +965,7 @@ class _showreportState extends State<showreport> {
                 ),
               ),
               MaterialButton(
-                color: Colors.blueAccent,
+               color: Colors.blue,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -902,7 +986,7 @@ class _showreportState extends State<showreport> {
                 ),
               ),
               MaterialButton(
-                color: Colors.blueAccent,
+                color: Colors.blue,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -918,13 +1002,15 @@ class _showreportState extends State<showreport> {
                     color: Color.fromARGB(255, 251, 251, 251),
                   ),
                 ),
-              ),
+              ),*/
 
             ],
           ),
         ),
       ),
     );
+
+
+
   }
 }
-

@@ -268,12 +268,99 @@ class HomeState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        //backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.pink[200],
+          title: new Text('Cancer Health Support'),
+        automaticallyImplyLeading: false,
+        // centerTitle: true,
+        actions: <Widget>[
+          ////////////////////////hnshel mnhon
+          IconButton(
+            icon: const Icon(Icons.how_to_reg_outlined ),
+            onPressed: () {
+              /*Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>  editUserScreen(),
+                ),
+              );*/
+            },
+          ),
+          /*IconButton(
+            icon: const Icon(Icons.circle_notifications ),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a Notification')));
+            },
+          ),*/
+          IconButton(
+            icon: const Icon(Icons.enhanced_encryption ),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a Notification')));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.home ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => HomeScreen(),
+                ),
+              );
+            },
+          ),
+
+
+          /* IconButton(
+              alignment: Alignment.topCenter,
+              icon: Image.asset(
+                "assets/images/imggp.png",
+                width: 50,
+              ),
+              onPressed: () {}
+          ),*/
+         /* IconButton(
+            icon: const Icon(Icons.add_alert),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a snackbar')));
+            },
+          ),*/
+          /*IconButton(
+            icon: const Icon(Icons.navigate_next),
+            tooltip: 'Go to the next page',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute<void>(
+                builder: (BuildContext context) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: const Text('Next page'),
+                    ),
+                    body: const Center(
+                      child: Text(
+                        'This is the next page',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  );
+                },
+              ));
+            },
+          ),*/
+        ],
+      ),
       backgroundColor: Color(0xFFFFFFFF),
       body: Column(
         children: <Widget>[
-          SizedBox(
-            height: 110,
-          ),
+         /* SizedBox(
+            height: 2,
+          ),*/
           Padding(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
@@ -282,35 +369,35 @@ class HomeState extends State<HomeScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                  /*  Text(
                       "Cancer Health Support",
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                               color: Colors.blueAccent,
                               fontSize: 20,
                               fontWeight: FontWeight.bold)),
-                    ),
+                    ),*/
                     SizedBox(
                       height: 4,
                     ),
-                    Text(
+                    /*Text(
                       "Home",
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                               color: Color(0xFF2196F3),
                               fontSize: 14,
                               fontWeight: FontWeight.w600)),
-                    ),
+                    ),*/
                   ],
                 ),
-                IconButton(
+                /*IconButton(
                   alignment: Alignment.topCenter,
                   icon: Image.asset(
                     "assets/images/imggp.png",
                     width: 50,
                   ),
                     onPressed: () {}
-                )
+                )*/
               ],
             ),
           ),

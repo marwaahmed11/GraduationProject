@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:project/ui/screens/home_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
-import '../../mainscreen.dart';
+
+import 'addevent_screen.dart';
+
 
 
 class Calendar extends StatefulWidget {
@@ -14,6 +19,13 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
+
+  String uid='';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  void getCurrentUser() async {
+    User? user = await _auth.currentUser;
+    uid = user!.uid;
+  }
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -24,7 +36,7 @@ class _CalendarState extends State<Calendar> {
   void initState() {
     selectedEvents = {};
     super.initState();
-
+    getCurrentUser();
     requestPermission();
 
     loadFCM();
@@ -174,12 +186,25 @@ class _CalendarState extends State<Calendar> {
     super.dispose();
   }
 
+
+  CollectionReference ref = FirebaseFirestore.instance.collection('calender');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Calendar"),
-        centerTitle: true,
+        backgroundColor: Colors.pink[200],
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_alert),
+            //tooltip: 'Show Snackbar',
+            onPressed: () {
+              /*ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a snackbar')));*/
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -202,7 +227,11 @@ class _CalendarState extends State<Calendar> {
                 selectedDay = selectDay;
                 focusedDay = focusDay;
               });
+
               print(focusedDay);
+              print("//////////////////////////////");
+              print(selectedDay );
+
             },
             selectedDayPredicate: (DateTime date) {
               return isSameDay(selectedDay, date);
@@ -214,13 +243,13 @@ class _CalendarState extends State<Calendar> {
             calendarStyle: CalendarStyle(
               isTodayHighlighted: true,
               selectedDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.pink[300],
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5.0),
               ),
               selectedTextStyle: TextStyle(color: Colors.white),
               todayDecoration: BoxDecoration(
-                color: Colors.purpleAccent,
+                color: Colors.pink[300],
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5.0),
               ),
@@ -238,7 +267,7 @@ class _CalendarState extends State<Calendar> {
               titleCentered: true,
               formatButtonShowsNext: false,
               formatButtonDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.pink[300],
                 borderRadius: BorderRadius.circular(5.0),
               ),
               formatButtonTextStyle: TextStyle(
@@ -254,53 +283,22 @@ class _CalendarState extends State<Calendar> {
             ),
           ),
         ],
+
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text("Event.."),
-            content: TextFormField(
-              controller: _eventController,
-            ),
-            actions: [
-              TextButton(
-                child: Text("Cancel"),
-                onPressed: () => Navigator.pop(context),
-              ),
-              TextButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  if (_eventController.text.isEmpty) {
 
-                  } else {
-                    if (selectedEvents[selectedDay] != null) {
-                      selectedEvents[selectedDay]!.add(
-                        Event(title: _eventController.text),
-                      );
-                    } else {
-                      selectedEvents[selectedDay] = [
-                        Event(title: _eventController.text)
-                      ];
-                    }
-
-                  }
-                  Navigator.pop(context);
-                  _eventController.clear();
-                  setState((){});
-                  return;
-                },
-              ),
-            ],
-          ),
-        ),
-        label: Text("Add Event"),
+      //  HomeScreen(),
+        label: Text("Add Details"),
         icon: Icon(Icons.add),
+        backgroundColor: Colors.pink[200],
+        onPressed: () {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => addevent ( uid: uid,selectedDay:selectedDay)));
+        },
       ),
     );
   }
 }
-
 
 class Event {
   final String title;

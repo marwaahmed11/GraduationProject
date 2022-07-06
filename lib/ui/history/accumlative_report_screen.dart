@@ -1,40 +1,31 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../../main.dart';
-import '../../model/user_model.dart';
-import '../screens/newhelper_screen.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:http/http.dart' as http;
 
-
-class addhelper extends StatefulWidget {
-
-  String uid;
- addhelper({required this.uid});
+class AccumlativeReport extends StatefulWidget {
+  String uid='';
+  List<String> x;
+  AccumlativeReport({required this.x});
   @override
-  _addhelperState createState() => _addhelperState(uid:uid);
+  State<AccumlativeReport> createState() => _reporttState(x:x);
 }
 
+class _reporttState extends State<AccumlativeReport> {
 
-
-class  _addhelperState extends State<addhelper> {
-  TextEditingController  name = TextEditingController();
-  TextEditingController subject1 = TextEditingController();
-  TextEditingController subject2 = TextEditingController();
-  TextEditingController subject3 = TextEditingController();
-  //TextEditingController uid = TextEditingController();
-  String uid;
-  //UserModel userModel = UserModel();
-  //addhelper({required UserModel uid});
-  _addhelperState({required this.uid});
-
-  //User? user = FirebaseAuth.instance.currentUser;
-
-  CollectionReference ref = FirebaseFirestore.instance.collection('helpers');
+  String uid='';
+  List<String> x;
+  _reporttState({required this.x});
+  final pdf = pw.Document();
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -43,6 +34,10 @@ class  _addhelperState extends State<addhelper> {
 
   @override
   void initState() {
+
+    setState(() {
+      // marks = int.parse(subject1) + int.parse(subject2) + int.parse(subject3);
+    });
     super.initState();
 
     requestPermission();
@@ -176,108 +171,122 @@ class  _addhelperState extends State<addhelper> {
   }
 
 
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        title:Text('Add'),
-        actions: [
-          MaterialButton(
-            onPressed: () {
-              ref.add({
-                'uid': uid,
-                'firstname': name.text,
-                'lastname': subject1.text,
-                'number': subject2.text,
-                'email': subject3.text
-              }).whenComplete(() {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
-              });
-            },
-            child: Text(
-              "Save",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),
-          MaterialButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => HelperScreen()));
-            },
-            child: Text(
-              "Back",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: name,
-                decoration: InputDecoration(
-                  hintText: 'firstname',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject1,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'lastname',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject2,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'number',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject3,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'email',
-                ),
-              ),
-            ),
-          ],
-        ),
+
+    return PdfPreview(
+      maxPageWidth: 1000,
+      //useActions: false,
+      //canChangePageFormat: true,
+      canChangeOrientation: false,
+      // pageFormats:pageformat,
+      canDebug: false,
+
+      build: (format) => generateDocument(
+        format,
       ),
     );
   }
+
+  Future<Uint8List> generateDocument(PdfPageFormat format) async {
+    final doc = pw.Document(pageMode: PdfPageMode.outlines);
+
+    final font1 = await PdfGoogleFonts.openSansLight();
+    final font2 = await PdfGoogleFonts.openSansLight();
+
+    String? _logo = await rootBundle.loadString('assets/r2.svg');
+
+    for(int i=0;i<x.length;i++)
+      {
+    doc.addPage(
+        pw.MultiPage(
+            margin: pw.EdgeInsets.all(10),
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return <pw.Widget>[
+                pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    mainAxisSize: pw.MainAxisSize.min,
+                    children: [
+                    /* pw.Text('Create a Simple PDF',
+                          textAlign: pw.TextAlign.center,
+                          style: pw.TextStyle(fontSize: 26)),*/
+                      //pw.Divider(),
+                    ]),
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisSize: pw.MainAxisSize.max,
+                  children: [
+                    pw.Center(
+                      child: pw.Text(
+                        'Final Report card',
+                        style: pw.TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                    ),
+                    pw.SizedBox(
+                      height: 20,
+                    ),
+
+                    pw.Divider(),
+                    pw.SizedBox(
+                      height: 20,
+                    ),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
+                        pw.Text(
+                          x[i],
+                          style: pw.TextStyle(
+                            fontSize: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                    pw.SizedBox(
+                      height: 20,
+                    ),
+                    pw.Divider(),
+
+
+                    /* pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      pw.Text(
+                        'Total : ',
+                        style: pw.TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                      pw.Text(
+                        marks.toString(),
+                        style: pw.TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                    ],
+                  ),*/
+                  ],
+
+                ),
+              ];
+            })
+    );}
+    Expanded(
+      child: SingleChildScrollView(
+        /*child: Visibility(
+          //visible: pdfFile.isNotEmpty,
+          //child: SfPdfViewer.file(File(pdfFile),
+              canShowScrollHead: false, canShowScrollStatus: false),*/
+      ),
+    );
+
+    return doc.save();
+  }
 }
-
-

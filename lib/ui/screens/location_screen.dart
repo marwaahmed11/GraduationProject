@@ -218,6 +218,17 @@ class _HomepageState extends State<LocationScreen>  {
     return Scaffold(
       appBar: new AppBar(
         title: new Text('Location'),
+        backgroundColor: Colors.pink[200],
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_location_alt),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a location')));
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -245,7 +256,7 @@ class _HomepageState extends State<LocationScreen>  {
               height: 10,
             ),
             Text('${Address}'),
-           ElevatedButton(
+         /* ElevatedButton(
                 onPressed: () async {
                   Position position = await _getGeoLocationPosition();
                   location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
@@ -256,8 +267,45 @@ class _HomepageState extends State<LocationScreen>  {
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                           (route) => false);
                 },
+                style: ElevatedButton.styleFrom(
+                primary: Colors.pink[200],
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                textStyle: TextStyle(
+                    fontSize: 20,
+                )),
+                child: Text('Access Location'),
 
-                child: Text('Access Location')),
+           ),*/
+        Material(
+          elevation: 5,
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.pink[200],
+
+          child: MaterialButton(
+
+              padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+             // minWidth: MediaQuery.of(context).size.width,
+              onPressed: () async {
+                Position position = await _getGeoLocationPosition();
+                location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
+                GetAddressFromLatLong(position);
+                Navigator.pushAndRemoveUntil(
+                    (context),
+                    //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (route) => false);
+              },
+              child: Text(
+                "Access Location",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 20, color: Colors.white, fontWeight: FontWeight.normal),
+              )),
+        ),
+            SizedBox(
+              height: 10,
+            ),
+
             Hero(
               tag: 'logoAnimation',
               child: Image.asset(

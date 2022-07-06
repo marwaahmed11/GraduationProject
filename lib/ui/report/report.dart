@@ -216,6 +216,7 @@ class _reporttState extends State<reportt> {
       // pageFormats:pageformat,
       canDebug: false,
 
+
       build: (format) => generateDocument(
         format,
       ),
@@ -227,11 +228,10 @@ class _reporttState extends State<reportt> {
 
     final font1 = await PdfGoogleFonts.openSansLight();
     final font2 = await PdfGoogleFonts.openSansLight();
-    // final image = await imageFromAssetBundle('assets/r2.svg');
 
     String? _logo = await rootBundle.loadString('assets/r2.svg');
 
-    doc.addPage(
+  /*  doc.addPage(
       pw.Page(
         pageTheme: pw.PageTheme(
           pageFormat: format.copyWith(
@@ -240,6 +240,7 @@ class _reporttState extends State<reportt> {
             marginRight: 10,
             marginTop: 10,
           ),
+          //pageFormat: PdfPageFormat.,
           orientation: pw.PageOrientation.portrait,
           theme: pw.ThemeData.withFont(
             base: font1,
@@ -507,7 +508,301 @@ class _reporttState extends State<reportt> {
               ));
         },
       ),
+    );*/
+    doc.addPage(
+        pw.MultiPage(
+            margin: pw.EdgeInsets.all(10),
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return <pw.Widget>[
+                pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    mainAxisSize: pw.MainAxisSize.min,
+                    children: [
+                      /*pw.Text('Create a Simple PDF',
+                          textAlign: pw.TextAlign.center,
+                          style: pw.TextStyle(fontSize: 26)),*/
+                     // pw.Divider(),
+                    ]),
+                pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    mainAxisSize: pw.MainAxisSize.max,
+                    children: [
+                      pw.Center(
+                        child: pw.Text(
+                          'Final Report card',
+                          style: pw.TextStyle(
+                            fontSize: 50,
+                          ),
+                        ),
+                      ),
+                      pw.SizedBox(
+                        height: 20,
+                      ),
+
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            'Created date : ',
+                            style: pw.TextStyle(
+                              fontSize: 40,
+                            ),
+                          ),
+                          pw.Text(
+                            date,
+                            style: pw.TextStyle(
+                              fontSize: 40,
+                            ),
+                          ),
+                          pw.SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
+                      pw.Divider(),
+                      pw.SizedBox(
+                        height: 20,
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            'name : ',
+                            style: pw.TextStyle(
+                              fontSize: 40,
+                            ),
+                          ),
+                          pw.Text(
+                            name,
+                            style: pw.TextStyle(
+                              fontSize: 40,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from hair loss? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject1,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from loss of appetite? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject2,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from diarrhea? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject3,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from vomiting? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject4,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from weight loss? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject5,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from changes in skin? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject6,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from ulcers in mouth? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject7,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from vaginal dryness? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject8,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from poor memory? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject9,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from anemia? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject10,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text(
+                            "Do you suffer from nerve damage? :",
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                          pw.Text(
+                            subject11,
+                            style: pw.TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.SizedBox(
+                        height: 20,
+                      ),
+                      pw.Divider(),
+                      /* pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      pw.Text(
+                        'Total : ',
+                        style: pw.TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                      pw.Text(
+                        marks.toString(),
+                        style: pw.TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                    ],
+                  ),*/
+                    ],
+
+                ),
+              ];
+            })
     );
+    Expanded(
+      child: SingleChildScrollView(
+        /*child: Visibility(
+          //visible: pdfFile.isNotEmpty,
+          //child: SfPdfViewer.file(File(pdfFile),
+              canShowScrollHead: false, canShowScrollStatus: false),*/
+        ),
+      );
 
     return doc.save();
   }

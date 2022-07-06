@@ -1,22 +1,37 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:project/main.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import '../../mainscreen.dart';
-/*
-class MyHomePage extends StatefulWidget {
-//MyHomePage({required Key key, required this.title}) : super(key: key);
-MyHomePage({Key? key, required this.title}) : super(key: key);
-final String title;
-@override
-_MyHomePageState createState() => _MyHomePageState();
+import 'package:intl/intl.dart';
+import '../../main.dart';
+import '../screens/event_screen.dart';
+import 'alert_screen.dart';
+
+
+class addevent extends StatefulWidget {
+
+  String uid;
+  DateTime selectedDay;
+  addevent({required this.uid,required this.selectedDay});
+  @override
+  _addeventState createState() => _addeventState(uid:uid,selectedDay:selectedDay);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+
+
+class  _addeventState extends State<addevent> {
+  TextEditingController  eventname = TextEditingController();
+  TextEditingController eventdesc = TextEditingController();
+  String uid;
+  DateTime selectedDay;
+
+  _addeventState({required this.uid,required this.selectedDay});
+
+  CollectionReference ref = FirebaseFirestore.instance.collection('calender');
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -158,53 +173,124 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-
-
-  /////
-  void customLaunch(command) async {
-    if (await canLaunch(command)) {
-      await launch(command);
-    } else {
-      print(' could not launch $command');
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
+    /*final number = TextFormField(
+        autofocus: false,
+        keyboardType: TextInputType.number,
+        controller: subject2,
+        onSaved: (value) {
+          eventname.text = value!;
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Number",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ));*/
+
+    String date= selectedDay.toString();
+    //TextEditingController x =date.t
+
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink[200],
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Calendar()));
 
-        title: Text("Email"),
+          },
+        ),
+        automaticallyImplyLeading: false,
+        title:Text('New Event'),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              ref.add({
+                'uid': uid,
+                'eventname': eventname.text,
+                'eventdesc': eventdesc.text,
+                'selectedDay':date,
+
+              }).whenComplete(() {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) =>ListEventScreen()));
+              });
+            },
+            child: Text(
+              "Save",
+              style: TextStyle(
+                fontSize: 20,
+                color: Color.fromARGB(255, 251, 251, 251),
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Center(
+
+      body: SingleChildScrollView(
         child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-
-                RaisedButton(
-                  onPressed: () {
-                    customLaunch('mailto:your@email.com?subject=test%20subject&body=test%20body');
-                  },
-                  child: Text('Email'),
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+           Padding(
+          padding: EdgeInsets.only(
+            left: 3,
+            right: 3,
+          ),),
+            Container(
+              //decoration: BoxDecoration(border: Border.all()),
+              child: TextField(
+                controller: eventname,
+                decoration: InputDecoration(
+                  hintText: 'Event Name',
                 ),
-                RaisedButton(
-                  onPressed: () {
-                    customLaunch('sms:');
-                  },
-                  child: Text('SMS'),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              //decoration: BoxDecoration(border: Border.all()),
+              child: TextField(
+                controller: eventdesc,
+                maxLines: null,
+                //keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Event Description',
                 ),
-              ],
-            )
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
+              decoration: BoxDecoration(border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ),),
+              child: Text(
+                date,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20),
+
+              ),
+            ),
+
           ],
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
-*/
+

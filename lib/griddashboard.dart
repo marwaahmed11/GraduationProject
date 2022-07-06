@@ -2,26 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/main.dart';
 import 'package:project/ui/screens/email_screen.dart';
-import 'package:project/ui/screens/questionnaire_screen.dart';
-import 'package:project/ui/screens/alert_screen.dart';
-import 'package:project/ui/widgets/original_button.dart';
+import 'package:project/ui/screens/symptom_screen.dart';
+
 
 class GridDashboard extends StatelessWidget {
   Items item1 = new Items(
     title: "Event",
     subtitle: "March, Wednesday",
     event: "3 Events",
-    screen:'alert' ,
+    screen:'events' ,
     img: "assets/images/calendar.png",
 
   );
 
   Items item2 = new Items(
-    title: "Email",
+    title: "Report History",
     subtitle: "send email",
-    event: "4 Items",
-    screen: 'email' ,
-    img: "assets/images/email.png",
+    event: "",
+    screen: 'history' ,
+    img: "assets/images/history.jpeg",
 
   );
   Items item3 = new Items(
@@ -33,7 +32,7 @@ class GridDashboard extends StatelessWidget {
   );
 
   Items item4 = new Items(
-    title: " Questionnaire",
+    title: "Log a Symptom",
     subtitle: "Answer Questionnaire ",
     event: "4 Items",
     screen: 'questionnaire' ,
@@ -43,7 +42,7 @@ class GridDashboard extends StatelessWidget {
     title: "Helper",
     subtitle: "",
     event: "",
-    screen : 'newhelper',
+    screen : 'helper',
     img: "assets/images/helper.jpg",
   );
   Items item6 = new Items(
@@ -59,6 +58,7 @@ class GridDashboard extends StatelessWidget {
 
     List<Items> myList = [item1,item2, item3,item4, item5,item6];
     var color = 0xFF03A9F4;
+
     return Flexible(
 
       child: GridView.count(
@@ -81,7 +81,10 @@ class GridDashboard extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                    color: Color(color),
+                   // color: Color(color),
+                   //color: Colors.pinkAccent,
+                   //color: Colors.pink[300],
+                    color: Colors.pink[200],
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

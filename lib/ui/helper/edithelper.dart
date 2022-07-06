@@ -9,7 +9,7 @@ import 'package:project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../report/report.dart';
-import '../screens/newhelper_screen.dart';
+import '../screens/helper_screen.dart';
 import 'package:http/http.dart' as http;
 
 class edithelper extends StatefulWidget {
@@ -218,9 +218,6 @@ class _edithelperState extends State<edithelper> {
 }
 
 
-
-
-
   void customLaunch(command) async {
     if (await canLaunch(command)) {
       await launch(command);
@@ -229,25 +226,55 @@ class _edithelperState extends State<edithelper> {
     }
   }
 
-  /*@override
-  void initState() {
-    name = TextEditingController(text: widget.docid.get('firstname'));
-    subject1 = TextEditingController(text: widget.docid.get('lastname'));
-    subject2 = TextEditingController(text: widget.docid.get('number'));
-    toEmail = TextEditingController(text: widget.docid.get('email'));
-    getlocation();
-    super.initState();
-  }*/
+  void actionPopUpItemSelected(String value, String name2) {
+    String message;
+    if (value == 'save') {
+      message = 'You selected save for $name2';
+      widget.docid.reference.update({
+        'firstname': name.text,
+        'lastname': subject1.text,
+        'number': subject2.text,
+        'email': toEmail.text
+      }).whenComplete(() {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HelperScreen()));
+      });
 
+
+      // You can navigate the user to edit page.
+    }
+    else if (value == 'delete') {
+      message = 'You selected delete for $name2';
+      widget.docid.reference.delete().whenComplete(() {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) =>  HelperScreen()));
+      });
+
+    }else {
+      message = 'Not implemented';
+    }
+    print(message);
+  }
+
+ String name2='';
   @override
   Widget build(BuildContext context) {
     getlocation();
     return Scaffold(
       appBar: AppBar(
-        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        title:Text('Edit'),
+        backgroundColor: Colors.pink[200],
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HelperScreen()));
+
+          },
+        ),
+        title:Text('Edit Helper'),
+        automaticallyImplyLeading: false,
         actions: [
-          MaterialButton(
+         /* MaterialButton(
             onPressed: () {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => HelperScreen()));
@@ -259,8 +286,8 @@ class _edithelperState extends State<edithelper> {
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
-          ),
-          MaterialButton(
+          ),*/
+         /* MaterialButton(
             onPressed: () {
               widget.docid.reference.update({
                 'firstname': name.text,
@@ -279,14 +306,15 @@ class _edithelperState extends State<edithelper> {
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
-          ),
-          MaterialButton(
+          ),*/
+          /*MaterialButton(
             onPressed: () {
               widget.docid.reference.delete().whenComplete(() {
                 Navigator.pushReplacement(
                     context, MaterialPageRoute(builder: (_) => HelperScreen()));
               });
             },
+
             child: Text(
               "Delete",
               style: TextStyle(
@@ -294,8 +322,35 @@ class _edithelperState extends State<edithelper> {
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
+          ),*/
+         /* IconButton(
+            icon: const Icon(Icons.edit_rounded ),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('edit')));
+            },
+          ),*/
+
+          PopupMenuButton(
+          itemBuilder: (context) {
+            return [
+            PopupMenuItem(
+              value: 'save',
+              child: Text('Save'),
+            ),
+            PopupMenuItem(
+              value: 'delete',
+                  child: Text('Delete'),
+            )
+            ];
+          },
+          onSelected: (String value){
+          print('You Click on po up menu item');
+          actionPopUpItemSelected(value, name2);
+          },
           ),
-        ],
+              ],
+
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -305,11 +360,11 @@ class _edithelperState extends State<edithelper> {
                 height: 20,
               ),
               Container(
-                decoration: BoxDecoration(border: Border.all()),
+                //decoration: BoxDecoration(border: Border.all()),
                 child: TextField(
                   controller: name,
                   decoration: InputDecoration(
-                    hintText: 'firstname',
+                    hintText: 'First Name',
                   ),
                 ),
               ),
@@ -317,13 +372,12 @@ class _edithelperState extends State<edithelper> {
                 height: 10,
               ),
               Container(
-                decoration: BoxDecoration(border: Border.all()),
+                //decoration: BoxDecoration(border: Border.all()),
                 child: TextField(
                   controller: subject1,
                   maxLines: null,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'lastname',
+                    hintText: 'Last Name',
                   ),
                 ),
               ),
@@ -331,13 +385,13 @@ class _edithelperState extends State<edithelper> {
                 height: 10,
               ),
               Container(
-                decoration: BoxDecoration(border: Border.all()),
+               // decoration: BoxDecoration(border: Border.all()),
                 child: TextField(
                   controller: subject2,
                   maxLines: null,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'number',
+                    hintText: 'Number',
                   ),
                 ),
               ),
@@ -345,13 +399,12 @@ class _edithelperState extends State<edithelper> {
                 height: 10,
               ),
               Container(
-                decoration: BoxDecoration(border: Border.all()),
+               // decoration: BoxDecoration(border: Border.all()),
                 child: TextField(
                   controller: toEmail,
                   maxLines: null,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'email',
+                    hintText: 'Email',
                   ),
                 ),
               ),
@@ -359,7 +412,7 @@ class _edithelperState extends State<edithelper> {
                 height: 20,
               ),
               //Text('${Address}'),
-              ElevatedButton(
+              /*ElevatedButton(
                     onPressed: () async{
                       getlocation();
                       String number = subject2.text;
@@ -368,13 +421,52 @@ class _edithelperState extends State<edithelper> {
                       customLaunch(url);
                     },
 
-                  child: Text('Send Location')),
-              //Text('${Address}'),
+                  child: Text('Send Location')),*/
+              Material(
+                elevation: 5,
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.pink[200],
 
+                child: MaterialButton(
+
+                    padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                    // minWidth: MediaQuery.of(context).size.width,
+                    onPressed: () async {
+                      getlocation();
+                      String number = subject2.text;
+                      String x = name.text+",please help me in this location "+Address;
+                      final url='sms:$number?body=$x';
+                      customLaunch(url);
+
+                    },
+                    child: Text(
+                      "Send Location",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal),
+                    )),
+              ),
+
+              //Text('${Address}'),
             ],
           ),
         ),
       ),
+     /* floatingActionButton: FloatingActionButton.extended(
+
+        //  HomeScreen(),
+        label: Text("Send Location"),
+        //icon: Icon(Icons.add),
+        backgroundColor: Colors.pink[200],
+        onPressed: () {
+          getlocation();
+          String number = subject2.text;
+          String x = name.text+",please help me in this location "+Address;
+          final url='sms:$number?body=$x';
+          customLaunch(url);
+
+        },
+      ),*/
     );
   }
 

@@ -3,8 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../model/user_model.dart';
-import 'home_screen.dart';
-import 'location_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/location_screen.dart';
 
 
 class RegistrationScreen extends StatefulWidget {
@@ -169,7 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.blueAccent,
+      color: Colors.pink[200],
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
@@ -190,7 +190,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.blueAccent),
+          icon: Icon(Icons.arrow_back, color: Colors.pink[200]),
           onPressed: () {
             // passing this to our root
             Navigator.of(context).pop();
@@ -212,7 +212,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                         height: 180,
                         child: Image.asset(
-                          "assets/images/logo.png",
+                          "assets/images/logo.jpg",
                           fit: BoxFit.contain,
                         )),
                     SizedBox(height: 45),

@@ -1,59 +1,45 @@
-
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:conditional_questions/conditional_questions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:project/ui/screens/home_screen.dart';
-/*
-class editUserScreen extends StatefulWidget {
-  editUserScreen();
+import 'package:project/ui/report/prediction.dart';
+import 'package:project/ui/screens/symptom_screen.dart';
+import '../../main.dart';
+import 'package:http/http.dart' as http;
+
+import '../screens/event_screen.dart';
+
+class showevent extends StatefulWidget {
+  DocumentSnapshot docid;
+  String uid;
+  showevent({required this.docid,required this.uid});
 
   @override
-  _edituserState createState() => _edituserState();
+  _showeventState createState() => _showeventState(docid: docid,uid:uid);
 }
 
-class _edituserState extends State<editUserScreen> {
+class _showeventState extends State<showevent> {
+  DocumentSnapshot docid;
+  String uid;
+  _showeventState({required this.docid,required this.uid});
 
-  String a = '';
-  late DocumentSnapshot uid;
-  _edituserState();
 
-  TextEditingController name = TextEditingController();
-  TextEditingController subject1 = TextEditingController();
-  TextEditingController subject2 = TextEditingController();
-  TextEditingController toEmail = TextEditingController();
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  void getCurrentUser() async {
-
-    User? user = await _auth.currentUser;
-    a = user!.uid;
-   uid= fetchCurrentUser(a) as DocumentSnapshot<Object?>;
-  }
-  Future<DocumentSnapshot> fetchCurrentUser(String uuid) async {
-    return await FirebaseFirestore.instance.collection('users').doc(uuid).get();
-
-  }
-
+  String name='';
+  String subject1 ='';
+  String date='';
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   String? token = " ";
 
   @override
-  void initState() async {
-    User? user = await _auth.currentUser;
-    a = user!.uid;
-    DocumentSnapshot uid=await FirebaseFirestore.instance.collection('users').doc(a).get();
+  void initState() {
+    date=widget.docid.get('selectedDay');
+    name = widget.docid.get('eventname');
+    subject1 =  widget.docid.get('eventdesc');
 
-
-    name = TextEditingController(text: widget.uid.get('firstname'));
-    subject1 = TextEditingController(text: widget.docid.get('lastname'));
-    subject2 = TextEditingController(text: widget.docid.get('number'));
-    toEmail = TextEditingController(text: widget.docid.get('email'));
 
     super.initState();
 
@@ -167,6 +153,10 @@ class _edituserState extends State<editUserScreen> {
 
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+      /// Create an Android Notification Channel.
+      ///
+      /// We use this channel in the `AndroidManifest.xml` file to override the
+      /// default FCM channel to enable heads up notifications.
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
@@ -183,18 +173,34 @@ class _edituserState extends State<editUserScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-
+    int group =1;
     return Scaffold(
       appBar: AppBar(
-        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        title:Text('Edit'),
+        title: Text(
+          "Show Event",
+          style: TextStyle(
+            fontSize: 20,
+            color: Color.fromARGB(255, 251, 251, 251),
+          ),
+        ),
+        backgroundColor: Colors.pink[200],
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ListEventScreen()));
+
+          },
+        ),
+        automaticallyImplyLeading: false,
         actions: [
-          MaterialButton(
+          /*MaterialButton(
             onPressed: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                  context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
             },
             child: Text(
               "Back",
@@ -203,32 +209,34 @@ class _edituserState extends State<editUserScreen> {
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
-          ),
-          MaterialButton(
+
+          ),*/
+
+          /* MaterialButton(
             onPressed: () {
-              widget.uid.reference.update({
-                'firstname': name.text,
-                'lastname': subject1.text,
-                'number': subject2.text,
-                'email': toEmail.text
+              widget.docid.reference.update({
+                'name': name.text,
+                'Maths': subject1.text,
+                'Science': subject2.text,
+                'History': subject3.text
               }).whenComplete(() {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
+                    context, MaterialPageRoute(builder: (_) => Home()));
               });
             },
             child: Text(
-              "Save",
+              "save",
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
-          ),
-          MaterialButton(
+          ),*/
+           MaterialButton(
             onPressed: () {
               widget.docid.reference.delete().whenComplete(() {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
+                    context, MaterialPageRoute(builder: (_) => ListEventScreen()));
               });
             },
             child: Text(
@@ -239,6 +247,7 @@ class _edituserState extends State<editUserScreen> {
               ),
             ),
           ),
+
         ],
       ),
       body: SingleChildScrollView(
@@ -249,79 +258,101 @@ class _edituserState extends State<editUserScreen> {
                 height: 20,
               ),
               Container(
-                decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    hintText: 'firstname',
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
-                  controller: subject1,
-                  maxLines: null,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'lastname',
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
-                  controller: subject2,
-                  maxLines: null,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'number',
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
-                  controller: toEmail,
-                  maxLines: null,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'email',
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              //Text('${Address}'),
-              ElevatedButton(
-                  onPressed: () async{
-                    getlocation();
-                    String number = subject2.text;
-                    String x = name.text+",please help me in this location "+Address;
-                    final url='sms:$number?body=$x';
-                    customLaunch(url);
-                  },
+                //decoration: BoxDecoration(border: Border.all()),
+                child: Text(
+                  'Event date: ',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20),
 
-                  child: Text('Send Location')),
-              //Text('${Address}'),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),),
+                child: Text(
+                  date,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20),
 
+                ),
+
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+              Container(
+                //decoration: BoxDecoration(border: Border.all()),
+                child: Text(
+                  'Event Name',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20),
+
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),),
+                child: Text(
+                  name,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20),
+
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+
+              Container(
+                //decoration: BoxDecoration(border: Border.all()),
+                child:  Text("Event Description ",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20),
+
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),),
+                child:  Text(
+                  subject1,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20),
+
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
             ],
           ),
         ),
       ),
     );
+
+
+
   }
-
 }
-*/
-

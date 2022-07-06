@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project/ui/screens/registration_screen.dart';
+import 'package:project/ui/authentication/registration_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'home_screen.dart';
+import '../screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -86,7 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.blueAccent,
+    //  color: Colors.blueAccent,
+      color: Colors.pink[200],
+     // color: Colors.pink,
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
@@ -118,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                         height: 200,
                         child: Image.asset(
-                          "assets/images/logo.png",
+                          "assets/images/logo.jpg",
                           fit: BoxFit.contain,
                         )),
                     SizedBox(height: 45),
@@ -143,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               "SignUp",
                               style: TextStyle(
-                                  color: Colors.blueAccent,
+                                  color: Colors.pink[300],
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15),
                             ),

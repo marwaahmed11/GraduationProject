@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:project/ui/report/report.dart';
-import 'package:project/ui/screens/questionnaire_screen.dart';
+import 'package:project/ui/screens/symptom_screen.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
 /*
@@ -294,8 +294,17 @@ class _addreportState extends State<addreport> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
         title: Text("Add Report"),
+        backgroundColor: Colors.pink[200],
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) =>QuestionnaireScreen()));
+
+          },
+        ),
         actions: [
           MaterialButton(
             onPressed: () {
@@ -321,14 +330,14 @@ class _addreportState extends State<addreport> {
               });
             },
             child: Text(
-              "save",
+              "Save",
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
           ),
-          MaterialButton(
+          /*MaterialButton(
             onPressed: () {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
@@ -340,23 +349,28 @@ class _addreportState extends State<addreport> {
                 color: Color.fromARGB(255, 251, 251, 251),
               ),
             ),
-          ),
+          ),*/
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [////////
+            Padding(
+            padding: const EdgeInsets.all(5),
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
-                  decoration: BoxDecoration(border: Border.all()),
+                  //decoration: BoxDecoration(border: Border.all()),
                   child: TextField(
                     controller: name,
                      decoration: InputDecoration(
-                         labelText: 'name',
+                         labelText: 'First Name',
                 ),
                   ),
                 ),
@@ -366,13 +380,14 @@ class _addreportState extends State<addreport> {
                 ),
 
 
-                _GroupText("Do you suffer from hair loss?"
+                _GroupText("1- Do you suffer from hair loss?"
                     "هل تعاني من فقدان سقوط الشعر؟"),
 
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue1,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue1 = value;
@@ -383,6 +398,7 @@ class _addreportState extends State<addreport> {
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue1,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue1 = value;
@@ -394,6 +410,7 @@ class _addreportState extends State<addreport> {
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue1,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue1 = value.toString();
@@ -402,17 +419,21 @@ class _addreportState extends State<addreport> {
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from loss of appetite?"
+                _GroupText("2- Do you suffer from loss of appetite?"
                     "هل تعاني من فقدان الشهية؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue2,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue2 = value;
@@ -423,6 +444,7 @@ class _addreportState extends State<addreport> {
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue2,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue2 = value;
@@ -434,6 +456,7 @@ class _addreportState extends State<addreport> {
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue2,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue2 = value;
@@ -442,257 +465,297 @@ class _addreportState extends State<addreport> {
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText( "Do you suffer from diarrhea?"
+                _GroupText( "3- Do you suffer from diarrhea?"
                     "هل تعاني من الاسهال؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue3,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue3 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue3,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue3 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value  to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue3,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue3 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from vomiting?"
+                _GroupText("4- Do you suffer from vomiting?"
                     "هل تعاني من القئ؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue4,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue4 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue4,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue4 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue4,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue4 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from weight loss?"
+                _GroupText("5- Do you suffer from weight loss?"
                     "هل تعاني من فقدان الوزن؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue5,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue5 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue5,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue5 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue5,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue5 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from changes in the nails and skin?"
+                _GroupText("6- Do you suffer from changes in the nails and skin?"
                     "هل تعاني من تغيرات في الأظافر والجلد؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue6,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue6 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue6,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue6 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue6,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue6 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from changes in ulcers in the mouth?"
+                _GroupText("7- Do you suffer from changes in ulcers in the mouth?"
                     "هل تعاني من تغيرات تقرحات في الفم؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue7,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue7 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue7,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue7 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue7,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue7 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from vaginal dryness?"
+                _GroupText("8- Do you suffer from vaginal dryness?"
                     "هل تعاني من جفاف مهبلي؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue8,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue8 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue8,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue8 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue8,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue8 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText( "Do you suffer from poor memory?"
+                _GroupText( "9- Do you suffer from poor memory?"
                     "هل تعاني من ضعف في الذاكرة؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue9,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue9 = value;
@@ -703,62 +766,70 @@ class _addreportState extends State<addreport> {
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue9,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue9 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue9,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue9 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from anemia?"
+                _GroupText("10- Do you suffer from anemia?"
                     "هل تعاني من فقر الدم؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue10,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue10 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
                 RadioListTile(
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue10,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue10 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
 
                 RadioListTile(
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue10,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue10 = value;
                       });
-                      _showToast('Changed value of Radio[Box] to $value');
+                      _showToast('Changed value to $value');
                     }),
               ],
             ),
@@ -767,17 +838,21 @@ class _addreportState extends State<addreport> {
             SizedBox(
               height: 50,
             ),
-            _SpaceLine(),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("Do you suffer from nerve damage?"
+                _GroupText("11- Do you suffer from nerve damage?"
                     "هل تعاني من تلف الاعصاب؟"),
                 RadioListTile(
                     title: const Text('None'),
                     value: 'None',
                     groupValue: _radioBoxValue11,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue11 = value;
@@ -788,6 +863,7 @@ class _addreportState extends State<addreport> {
                     title: const Text('Mid'),
                     value: 'Mid',
                     groupValue: _radioBoxValue11,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue11 = value;
@@ -799,6 +875,7 @@ class _addreportState extends State<addreport> {
                     title: const Text('Severe'),
                     value: 'Severe',
                     groupValue: _radioBoxValue11,
+                    activeColor: Colors.pink[200],
                     onChanged: (String? value) {
                       setState(() {
                         _radioBoxValue11 = value;
@@ -850,7 +927,7 @@ class _GroupText extends StatelessWidget {
     );
   }
 }
-
+/*
 class _SpaceLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -861,4 +938,4 @@ class _SpaceLine extends StatelessWidget {
       ),
     );
   }
-}
+}*/

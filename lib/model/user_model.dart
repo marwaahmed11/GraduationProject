@@ -48,7 +48,7 @@ class UserModel {
   Future<String?> addMultipleCollections({String? id })async{
 
     CollectionReference users=FirebaseFirestore.instance.collection('newuser');
-    users.doc(id).collection('newhelper').add({
+    users.doc(id).collection('helper').add({
       'helperid':id,
       //'Created_at' : DateTime.now()
     });
