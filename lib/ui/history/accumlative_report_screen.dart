@@ -48,7 +48,7 @@ class _reporttState extends State<AccumlativeReport> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -224,7 +224,7 @@ class _reporttState extends State<AccumlativeReport> {
                   children: [
                     pw.Center(
                       child: pw.Text(
-                        'Final Report card',
+                        'History Report ',
                         style: pw.TextStyle(
                           fontSize: 50,
                         ),

@@ -45,7 +45,7 @@ class _CalendarState extends State<Calendar> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }

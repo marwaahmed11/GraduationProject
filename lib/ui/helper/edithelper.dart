@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../report/report.dart';
 import '../screens/helper_screen.dart';
 import 'package:http/http.dart' as http;
+import '../widgets/original_button.dart';
 
 class edithelper extends StatefulWidget {
   DocumentSnapshot docid;
@@ -29,7 +30,7 @@ class _edithelperState extends State<edithelper> {
   TextEditingController name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
-  TextEditingController toEmail = TextEditingController();
+
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -41,7 +42,7 @@ class _edithelperState extends State<edithelper> {
     name = TextEditingController(text: widget.docid.get('firstname'));
     subject1 = TextEditingController(text: widget.docid.get('lastname'));
     subject2 = TextEditingController(text: widget.docid.get('number'));
-    toEmail = TextEditingController(text: widget.docid.get('email'));
+
     getlocation();
     super.initState();
 
@@ -53,7 +54,7 @@ class _edithelperState extends State<edithelper> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -234,7 +235,7 @@ class _edithelperState extends State<edithelper> {
         'firstname': name.text,
         'lastname': subject1.text,
         'number': subject2.text,
-        'email': toEmail.text
+
       }).whenComplete(() {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => HelperScreen()));
@@ -271,7 +272,7 @@ class _edithelperState extends State<edithelper> {
 
           },
         ),
-        title:Text('Edit Helper'),
+        title:Text('Confirm Helper'),
         automaticallyImplyLeading: false,
         actions: [
          /* MaterialButton(
@@ -398,16 +399,7 @@ class _edithelperState extends State<edithelper> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-               // decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
-                  controller: toEmail,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                  ),
-                ),
-              ),
+
               SizedBox(
                 height: 20,
               ),
@@ -422,7 +414,7 @@ class _edithelperState extends State<edithelper> {
                     },
 
                   child: Text('Send Location')),*/
-              Material(
+             /* Material(
                 elevation: 5,
                 borderRadius: BorderRadius.circular(30),
                 color: Colors.pink[200],
@@ -445,6 +437,35 @@ class _edithelperState extends State<edithelper> {
                       style: TextStyle(
                           fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal),
                     )),
+              ),*/
+              SizedBox(
+                height: 200,
+              ),
+              Hero(
+                tag: 'logoAnimation',
+                child: Image.asset(
+                  'assets/images/map.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: OriginalButton(
+                  text: 'Send Location',
+                  color: Colors.pink.shade200,
+                  textColor: Colors.white,
+                  onPressed: () async{
+                    getlocation();
+                    String number = subject2.text;
+                    String x = name.text+",please help me in this location "+Address;
+                    final url='sms:$number?body=$x';
+                    customLaunch(url);
+
+                  },
+                ),
               ),
 
               //Text('${Address}'),

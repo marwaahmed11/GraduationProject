@@ -295,9 +295,11 @@ class  _addhelperState extends State<addhelper> {
   TextEditingController  name = TextEditingController();
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
-  TextEditingController subject3 = TextEditingController();
+
   //TextEditingController uid = TextEditingController();
   String uid;
+  bool _validate = false;
+  final _formKey = GlobalKey<FormState>();
   //UserModel userModel = UserModel();
   //addhelper({required UserModel uid});
   _addhelperState({required this.uid});
@@ -323,7 +325,7 @@ class  _addhelperState extends State<addhelper> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -452,9 +454,6 @@ class  _addhelperState extends State<addhelper> {
         autofocus: false,
         keyboardType: TextInputType.number,
         controller: subject2,
-        onSaved: (value) {
-          name.text = value!;
-        },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -462,7 +461,20 @@ class  _addhelperState extends State<addhelper> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-        ));
+        ),
+      validator : (value)
+      {
+        if(value==null || value.isEmpty)
+        {
+          return ("Number is Empty!");
+        }
+        return null;
+      },
+      onSaved: (value) {
+        subject2.text = value!;
+      },
+    );
+
 
 
     return Scaffold(
@@ -488,16 +500,28 @@ class  _addhelperState extends State<addhelper> {
           ),*/
           MaterialButton(
             onPressed: () {
-              ref.add({
+
+             /* print(name.text);
+              print(subject1.text);
+              print(subject2.text);*/
+    /////////if (_formKey.currentState!.validate()){
+                print("on pressed");
+                ref.add({
                 'uid': uid,
                 'firstname': name.text,
                 'lastname': subject1.text,
                 'number': subject2.text,
-                'email': subject3.text
-              }).whenComplete(() {
+
+                }).whenComplete(() {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
-              });
+                context, MaterialPageRoute(builder: (_) => HelperScreen()));
+                });
+   /////// }
+    /*else
+      {
+        print("errorrrrrrrrrrrrr");
+      }*/
+
             },
             child: Text(
               "Save",
@@ -532,20 +556,36 @@ class  _addhelperState extends State<addhelper> {
       ),*/
       body: SingleChildScrollView(
         child: Column(
+          key: _formKey,
           children: [
             SizedBox(
               height: 10,
             ),
             Container(
              // decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
+              child: TextFormField(
                 controller: name,
                 decoration: InputDecoration(
                   hintText: 'First Name',
+
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                validator : (value)
+                {
+                  if(value==null || value.isEmpty)
+                  {
+                    print("Empty first");
+                    return ("First Name is Empty!");
+                  }
+                  print("first");
+                  return null;
+                },
+                onSaved: (value) {
+                  name.text = value!;
+                  print(name.text);
+                },
               ),
             ),
             SizedBox(
@@ -553,36 +593,33 @@ class  _addhelperState extends State<addhelper> {
             ),
             Container(
              // decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
+              child: TextFormField(
                 controller: subject1,
                 maxLines: null,
                 //keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Last Name',
+
                 ),
+                validator : (value)
+                  {
+                    if(value==null || value.isEmpty)
+                      {
+                        return ("Last Name is Empty!");
+                      }
+                    return null;
+                  },
+                onSaved: (value) {
+                  subject1.text = value!;
+                },
+
               ),
             ),
+
             SizedBox(
               height: 10,
             ),
               number,
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              //decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject3,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

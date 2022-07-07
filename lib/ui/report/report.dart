@@ -83,7 +83,7 @@ class _reporttState extends State<reportt> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }

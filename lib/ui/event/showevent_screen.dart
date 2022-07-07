@@ -51,7 +51,7 @@ class _showeventState extends State<showevent> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -271,7 +271,7 @@ class _showeventState extends State<showevent> {
                 margin: const EdgeInsets.all(10.0),
                 padding: const EdgeInsets.all(5.0),
                 decoration: BoxDecoration(border: Border.all(
-                  color: Colors.black,
+                  color: Colors.black12,
                   width: 1,
                 ),),
                 child: Text(
@@ -284,8 +284,8 @@ class _showeventState extends State<showevent> {
 
               ),
               Divider(
-                color: Colors.black,
-                thickness: 1,
+                color: Colors.black12,
+                thickness: 2,
               ),
               Container(
                 //decoration: BoxDecoration(border: Border.all()),
@@ -302,7 +302,7 @@ class _showeventState extends State<showevent> {
                 margin: const EdgeInsets.all(10.0),
                 padding: const EdgeInsets.all(5.0),
                 decoration: BoxDecoration(border: Border.all(
-                  color: Colors.black,
+                  color: Colors.black12,
                   width: 1,
                 ),),
                 child: Text(
@@ -314,8 +314,8 @@ class _showeventState extends State<showevent> {
                 ),
               ),
               Divider(
-                color: Colors.black,
-                thickness: 1,
+                color: Colors.black12,
+                thickness: 2,
               ),
 
               Container(
@@ -331,7 +331,7 @@ class _showeventState extends State<showevent> {
                 margin: const EdgeInsets.all(10.0),
                 padding: const EdgeInsets.all(5.0),
                 decoration: BoxDecoration(border: Border.all(
-                  color: Colors.black,
+                  color: Colors.black12,
                   width: 1,
                 ),),
                 child:  Text(
@@ -343,8 +343,8 @@ class _showeventState extends State<showevent> {
                 ),
               ),
               Divider(
-                color: Colors.black,
-                thickness: 1,
+                color: Colors.black12,
+                thickness: 2,
               ),
             ],
           ),

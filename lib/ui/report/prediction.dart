@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:http/http.dart' as http;
 
 class prediction extends StatefulWidget {
   DocumentSnapshot docid;
@@ -52,6 +58,19 @@ class _predictionState extends State<prediction> {
 
       // marks = int.parse(subject1) + int.parse(subject2) + int.parse(subject3);
     });
+
+    requestPermission();
+
+    loadFCM();
+
+    listenFCM();
+
+    getToken();
+
+    FirebaseMessaging.instance.subscribeToTopic("Health");
+
+    sendPushMessage();
+
     if (subject1 == 'None' || subject1 == '') {
       subject1 = 'no';
     }
@@ -114,53 +133,131 @@ class _predictionState extends State<prediction> {
 
     super.initState();
   }
+  late AndroidNotificationChannel channel;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  /*@override
-  Widget build(BuildContext context) {
-    predict();
-    String  out='';
-    final listMap = x.asMap();
-    for(int i=0;i<x.length;i++){
-      out =out+ listMap[i].toString()+"\n\n";
-    }
+  String? token = " ";
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: new AppBar(
-        title: new Text('Prediction'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
 
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(height: 20),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child : Text( out,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20),),
-                    ),
-                    ],
-                  ),
-                ),
-                /////////////////////////////////////////
 
-              ],
-            ),
-          ],
-
+  void sendPushMessage() async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAAwyqJYMY:APA91bE_gBwYDgr9-puMHLyY6s5OTowlcv62FPi4XRdUqAPivmF8MX4TMtAzNifUwIDEn0CiqXcoJfglYpYcTqWnQbzXzqfd1JeBHlLQnnu1MHGEO6uovuKuzsI6ASKqGoeH5VwDJhyQ',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': 'Test Body',
+              'title': 'Test Title 2'
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'id': '1',
+              'status': 'done'
+            },
+            "to": "$token",
+          },
         ),
-      ),
+      );
+      print("heyyyyyyyyyyyyyyyyyyyy");
+    } catch (e) {
+      print("error push notification");
+    }
+  }
 
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then(
+            (token) {
+          setState(() {
+            token = token;
+          });
+        }
+      //(token) => print(token)
+    );
+  }
+
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
     );
 
-  }*/
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  void listenFCM() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  void loadFCM() async {
+    if (!kIsWeb) {
+      channel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        importance: Importance.high,
+        enableVibration: true,
+      );
+
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      /// Create an Android Notification Channel.
+      ///
+      /// We use this channel in the `AndroidManifest.xml` file to override the
+      /// default FCM channel to enable heads up notifications.
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+
+      /// Update the iOS foreground notification presentation options to allow
+      /// heads up notifications.
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +271,7 @@ class _predictionState extends State<prediction> {
     return Scaffold(
 
       appBar: AppBar(
-        //backgroundColor: Color.fromARGB(255, 0, 11, 133),
+        backgroundColor: Colors.pink[200],
         title: Text('Predition'),
       ),
       /*  Padding(
@@ -225,7 +322,7 @@ class _predictionState extends State<prediction> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                             side: BorderSide(
-                              color: Colors.black,
+                              color: Colors.black12,
                             ),
                           ),
                           title: Text(
@@ -254,10 +351,10 @@ class _predictionState extends State<prediction> {
   void predict() {
     if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
-      x.add('exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract'
+      x.add('Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract'
               + '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية');
       // return "Immunodeficiency and exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract";
@@ -266,12 +363,12 @@ class _predictionState extends State<prediction> {
     //2
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       // return "Immunodeficiency and exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract";
@@ -280,13 +377,13 @@ class _predictionState extends State<prediction> {
     //3
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('diarrhea' + '\n' + 'إسهال');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Diarrhea' + '\n' + 'إسهال');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -295,13 +392,13 @@ class _predictionState extends State<prediction> {
     //4
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('diarrhea' + '\n' + 'إسهال');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Diarrhea' + '\n' + 'إسهال');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -309,12 +406,12 @@ class _predictionState extends State<prediction> {
     //5
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -322,26 +419,26 @@ class _predictionState extends State<prediction> {
     //6
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
     //7
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('diarrhea' + '\n' + 'إسهال');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Diarrhea' + '\n' + 'إسهال');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -349,11 +446,11 @@ class _predictionState extends State<prediction> {
     //8
     else if (subject10 == 'yes' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'no' && subject2 == 'no') {
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('diarrhea' + '\n' + 'إسهال');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Diarrhea' + '\n' + 'إسهال');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -361,12 +458,12 @@ class _predictionState extends State<prediction> {
     //9
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -374,13 +471,13 @@ class _predictionState extends State<prediction> {
     //10
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -388,11 +485,11 @@ class _predictionState extends State<prediction> {
     //11
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -400,12 +497,12 @@ class _predictionState extends State<prediction> {
     //12
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -413,13 +510,13 @@ class _predictionState extends State<prediction> {
     //13
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -427,12 +524,12 @@ class _predictionState extends State<prediction> {
     //14
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -440,12 +537,12 @@ class _predictionState extends State<prediction> {
     //15
     else if (subject10 == 'yes' && subject7 == 'no' && subject4 == 'no' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -456,7 +553,7 @@ class _predictionState extends State<prediction> {
         subject3 == 'no' && subject2 == 'no') {
       x.add('Immunodeficiency' + '\n' + 'نقص المناعة');
       x.add(
-          'exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
+          'Exposure to infections such as sore throat, high temperature, inflammation of the respiratory tract and urinary tract' +
               '\n' +
               'التعرض للعدوى مثل التهاب الحلق وارتفاع درجة الحرارة والتهاب الجهاز التنفسي والمسالك البولية);');
       return;
@@ -464,132 +561,132 @@ class _predictionState extends State<prediction> {
     //17
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
     //18
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
       return;
     }
     //19
 
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('diarrhea' + '\n' + 'إسهال');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Diarrhea' + '\n' + 'إسهال');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
     //20
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'no') {
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('diarrhea' + '\n' + 'إسهال');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Diarrhea' + '\n' + 'إسهال');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
 //21
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
 //22
 
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
 //23
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('diarrhea' + '\n' + 'إسهال');
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('Diarrhea' + '\n' + 'إسهال');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
 
 //24
     else if (subject10 == 'no' && subject7 == 'yes' && subject4 == 'no' &&
         subject3 == 'no' && subject2 == 'no') {
-      x.add('loss of appetite''\n' + 'فقدان الشهية');
-      x.add('diarrhea' + '\n' + 'إسهال');
+      x.add('Loss of appetite''\n' + 'فقدان الشهية');
+      x.add('Diarrhea' + '\n' + 'إسهال');
       return;
     }
 //25
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite' + '\n' + 'فقدان الشهية');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite' + '\n' + 'فقدان الشهية');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       return;
     }
 //26
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite' + '\n' + 'فقدان الشهية');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite' + '\n' + 'فقدان الشهية');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       return;
     }
     //27
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite' + '\n' + 'فقدان الشهية');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite' + '\n' + 'فقدان الشهية');
       return;
     }
 //28
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'yes' &&
         subject3 == 'no' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('loss of appetite' + '\n' + 'فقدان الشهية');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Loss of appetite' + '\n' + 'فقدان الشهية');
       return;
     }
 //29
 
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       return;
     }
 //30
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'no' &&
         subject3 == 'yes' && subject2 == 'no') {
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
-      x.add('ulcers in mouth' + '\n' + 'تقرحات في الفم');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Ulcers in mouth' + '\n' + 'تقرحات في الفم');
       return;
     }
 //31
     else if (subject10 == 'no' && subject7 == 'no' && subject4 == 'no' &&
         subject3 == 'no' && subject2 == 'yes') {
-      x.add('vomiting' + '\n' + 'التقيؤ');
-      x.add('general fatigue' + '\n' + 'التعب العام');
-      x.add('weight loss' + '\n' + 'فقدان الوزن');
+      x.add('Vomiting' + '\n' + 'التقيؤ');
+      x.add('General fatigue' + '\n' + 'التعب العام');
+      x.add('Weight loss' + '\n' + 'فقدان الوزن');
       return;
     }
 //32

@@ -49,7 +49,7 @@ class _editUserScreenState extends State<editUserScreen> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -252,7 +252,7 @@ class _editUserScreenState extends State<editUserScreen> {
                 child: TextField(
                   controller: name,
                   decoration: InputDecoration(
-                    hintText: 'firstname',
+                    hintText: 'First Name',
                   ),
                 ),
               ),
@@ -264,9 +264,9 @@ class _editUserScreenState extends State<editUserScreen> {
                 child: TextField(
                   controller: name2,
                   maxLines: null,
-                  keyboardType: TextInputType.number,
+                  //keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'lastname',
+                    hintText: 'Last Name',
                   ),
                 ),
               ),
@@ -278,9 +278,9 @@ class _editUserScreenState extends State<editUserScreen> {
                 child: TextField(
                   controller: toEmail,
                   maxLines: null,
-                  keyboardType: TextInputType.number,
+                  //keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    hintText: 'email',
+                    hintText: 'Email',
                   ),
                 ),
               ),

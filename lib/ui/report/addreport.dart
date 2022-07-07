@@ -152,7 +152,7 @@ class _addreportState extends State<addreport> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -420,8 +420,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -466,8 +466,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -512,8 +512,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -558,8 +558,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -604,8 +604,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -650,8 +650,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -696,8 +696,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -742,8 +742,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -788,8 +788,8 @@ class _addreportState extends State<addreport> {
               ],
             ),
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -835,12 +835,10 @@ class _addreportState extends State<addreport> {
             ),
             // TextField
             // DateTimePicker
-            SizedBox(
-              height: 50,
-            ),
+
             Divider(
-              color: Colors.black,
-              thickness: 1,
+              color: Colors.black12,
+              thickness: 2,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,

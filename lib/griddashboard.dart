@@ -20,7 +20,7 @@ class GridDashboard extends StatelessWidget {
     subtitle: "send email",
     event: "",
     screen: 'history' ,
-    img: "assets/images/history.jpeg",
+    img: "assets/images/history.PNG",
 
   );
   Items item3 = new Items(

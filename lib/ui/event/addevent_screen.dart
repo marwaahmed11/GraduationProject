@@ -50,7 +50,7 @@ class  _addeventState extends State<addevent> {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -275,7 +275,7 @@ class  _addeventState extends State<addevent> {
               margin: const EdgeInsets.all(10.0),
               padding: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(border: Border.all(
-                color: Colors.black,
+                color: Colors.black12,
                 width: 1,
               ),),
               child: Text(

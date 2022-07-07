@@ -5,14 +5,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../main.dart';
 import '../../mainscreen.dart';
-
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
-
+import '../widgets/original_button.dart';
 import 'home_screen.dart';
 
 
@@ -25,7 +24,9 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _HomepageState extends State<LocationScreen>  {
-  _HomepageState(){fun();}
+  _HomepageState(){
+    //fun();
+    }
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -35,7 +36,7 @@ class _HomepageState extends State<LocationScreen>  {
   @override
   void initState() {
     super.initState();
-    fun();
+    //fun();
 
     requestPermission();
 
@@ -45,7 +46,7 @@ class _HomepageState extends State<LocationScreen>  {
 
     getToken();
 
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
+    FirebaseMessaging.instance.subscribeToTopic("Health");
 
     sendPushMessage();
   }
@@ -214,7 +215,7 @@ class _HomepageState extends State<LocationScreen>  {
 
   @override
   Widget build(BuildContext context) {
-    fun();
+   // fun();
     return Scaffold(
       appBar: new AppBar(
         title: new Text('Location'),
@@ -234,6 +235,19 @@ class _HomepageState extends State<LocationScreen>  {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              height: 10,
+            ),
+            Hero(
+              tag: 'logoAnimation',
+              child: Image.asset(
+                'assets/images/map.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             Text(
               'Coordinates Points',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -246,7 +260,7 @@ class _HomepageState extends State<LocationScreen>  {
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             Text(
               'ADDRESS',
@@ -276,7 +290,10 @@ class _HomepageState extends State<LocationScreen>  {
                 child: Text('Access Location'),
 
            ),*/
-        Material(
+            SizedBox(
+              height: 90,
+            ),
+        /*Material(
           elevation: 5,
           borderRadius: BorderRadius.circular(30),
           color: Colors.pink[200],
@@ -301,18 +318,56 @@ class _HomepageState extends State<LocationScreen>  {
                 style: TextStyle(
                     fontSize: 20, color: Colors.white, fontWeight: FontWeight.normal),
               )),
-        ),
-            SizedBox(
-              height: 10,
-            ),
+        ),*/
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: OriginalButton(
+                text: 'Access Location',
+                color: Colors.pink.shade200,
+                textColor: Colors.white,
+                onPressed: () async{
+                  Position position = await _getGeoLocationPosition();
+                  location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
+                  GetAddressFromLatLong(position);
+                 /* Navigator.pushAndRemoveUntil(
+                      (context),
+                      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                          (route) => false);*/
 
-            Hero(
+                },
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: OriginalButton(
+                text: 'Skip',
+                color: Colors.white,
+                textColor: Colors.black,
+                onPressed: () async{
+                  Navigator.pushAndRemoveUntil(
+                      (context),
+                      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                          (route) => false);
+
+                },
+              ),
+            ),
+           /* SizedBox(
+              height: 10,
+            ),*/
+
+            /*Hero(
               tag: 'logoAnimation',
               child: Image.asset(
                 'assets/images/map.png',
                 fit: BoxFit.cover,
               ),
-            ),
+            ),*/
           ],
         ),
       ),

@@ -210,9 +210,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                        height: 180,
+                        height: 150,
                         child: Image.asset(
-                          "assets/images/logo.jpg",
+                          "assets/images/logo.PNG",
                           fit: BoxFit.contain,
                         )),
                     SizedBox(height: 45),

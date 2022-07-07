@@ -1,13 +1,11 @@
-/*
 import 'package:flutter/material.dart';
-
 import '../widgets/original_button.dart';
 
 class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25),
         child: Column(
@@ -17,7 +15,7 @@ class IntroScreen extends StatelessWidget {
             Hero(
               tag: 'logoAnimation',
               child: Image.asset(
-                'assets/images/logo.png',
+                'assets/images/logo.PNG',
                 fit: BoxFit.cover,
               ),
             ),
@@ -25,8 +23,8 @@ class IntroScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: OriginalButton(
                 text: 'Get Started',
-                color: Colors.white,
-                textColor: Colors.lightBlue,
+                color: Colors.pink.shade200,
+                textColor: Colors.white,
                 onPressed: () {
                   Navigator.of(context).pushNamed('login');
                 },
@@ -40,4 +38,3 @@ class IntroScreen extends StatelessWidget {
 }
 
 
-*/
