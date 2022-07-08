@@ -96,7 +96,8 @@ class _editUserScreenState extends State<editUserScreen> {
           ),
         ],
       ),
-      body: Form(
+      body: SingleChildScrollView(
+      child: Form(
         key: _formKey,
         child: Container(
           child: Column(
@@ -201,6 +202,7 @@ class _editUserScreenState extends State<editUserScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

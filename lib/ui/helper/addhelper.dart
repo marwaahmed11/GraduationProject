@@ -93,7 +93,8 @@ class  _addhelperState extends State<addhelper> {
           ),
         ],
       ),
-      body: Form(
+      body: SingleChildScrollView(
+      child: Form(
         key: _formKey,
         child: Column(
           children: [
@@ -176,6 +177,7 @@ class  _addhelperState extends State<addhelper> {
           ],
         ),
       ),
+    ),
     );
   }
 }

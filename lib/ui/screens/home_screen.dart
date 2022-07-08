@@ -70,11 +70,6 @@ class HomeState extends State<HomeScreen> {
           ),
 
           IconButton(
-            icon: const Icon(Icons.enhanced_encryption ),
-            onPressed: () {
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.home ),
             onPressed: () {
               Navigator.push(

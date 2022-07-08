@@ -120,7 +120,8 @@ class _addreportState extends State<addreport> {
           ),
         ],
       ),
-      body: Form(
+      body: SingleChildScrollView(
+      child: Form(
         key: _formKey,
         child: Column(
           children: [
@@ -670,6 +671,7 @@ class _addreportState extends State<addreport> {
             ),
           ],
         ),
+       ),
       ),
     );
   }

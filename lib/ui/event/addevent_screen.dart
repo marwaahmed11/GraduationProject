@@ -104,7 +104,8 @@ class  _addeventState extends State<addevent> {
         ],
       ),
 
-      body: Form(
+      body: SingleChildScrollView(
+      child: Form(
         key: _formKey,
         child: Column(
           children: [
@@ -173,6 +174,7 @@ class  _addeventState extends State<addevent> {
           ],
         ),
       ),
+    ),
     );
   }
 }
