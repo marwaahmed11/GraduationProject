@@ -1,126 +1,9 @@
-import 'dart:convert';
-import 'package:date_format/date_format.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
-import 'package:project/ui/report/report.dart';
 import 'package:project/ui/screens/symptom_screen.dart';
-import '../../main.dart';
-import 'package:http/http.dart' as http;
-/*
-class addnote extends StatelessWidget {
-  TextEditingController name = TextEditingController();
-  TextEditingController subject1 = TextEditingController();
-  TextEditingController subject2 = TextEditingController();
-  TextEditingController subject3 = TextEditingController();
-
-  CollectionReference ref = FirebaseFirestore.instance.collection('report');
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 11, 133),
-        actions: [
-          MaterialButton(
-            onPressed: () {
-              ref.add({
-                'name': name.text,
-                'Maths': subject1.text,
-                'Science': subject2.text,
-                'History': subject3.text
-              }).whenComplete(() {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => Home()));
-              });
-            },
-            child: Text(
-              "save",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),
-          MaterialButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => Home()));
-            },
-            child: Text(
-              "Back",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: name,
-                decoration: InputDecoration(
-                  hintText: 'name',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject1,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Maths',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject2,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Science',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: TextField(
-                controller: subject3,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'History',
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
+import '../../supportmessage.dart';
 
 class addreport extends StatefulWidget {
 
@@ -134,58 +17,26 @@ class _addreportState extends State<addreport> {
 
   String uid;
   _addreportState({required this.uid});
-
-  late AndroidNotificationChannel channel;
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  String? token = " ";
+  final _formKey = GlobalKey<FormState>();
+  supportMessage message=new supportMessage();
 
   @override
   void initState() {
     super.initState();
 
-    requestPermission();
+    message.requestPermission();
 
-    loadFCM();
+    message.loadFCM();
 
-    listenFCM();
+    message.listenFCM();
 
     getToken();
 
     FirebaseMessaging.instance.subscribeToTopic("Health");
 
-    sendPushMessage();
+    message.sendPushMessage();
   }
 
-  void sendPushMessage() async {
-    try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAAwyqJYMY:APA91bE_gBwYDgr9-puMHLyY6s5OTowlcv62FPi4XRdUqAPivmF8MX4TMtAzNifUwIDEn0CiqXcoJfglYpYcTqWnQbzXzqfd1JeBHlLQnnu1MHGEO6uovuKuzsI6ASKqGoeH5VwDJhyQ',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': 'Test Body',
-              'title': 'Test Title 2'
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done'
-            },
-            "to": "$token",
-          },
-        ),
-      );
-      print("heyyyyyyyyyyyyyyyyyyyy");
-    } catch (e) {
-      print("error push notification");
-    }
-  }
 
   void getToken() async {
     await FirebaseMessaging.instance.getToken().then(
@@ -194,83 +45,11 @@ class _addreportState extends State<addreport> {
             token = token;
           });
         }
-      //(token) => print(token)
     );
   }
-
-  void requestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
-
-  void listenFCM() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ),
-        );
-      }
-    });
-  }
-
-  void loadFCM() async {
-    if (!kIsWeb) {
-      channel = const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        importance: Importance.high,
-        enableVibration: true,
-      );
-
-      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    }
-  }
-
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  //////////////////////////////////////////////
-  //String name='';
+
   TextEditingController name = TextEditingController();
   String?  _radioBoxValue1 = 'None';
   String? _radioBoxValue2 = 'None';
@@ -308,6 +87,7 @@ class _addreportState extends State<addreport> {
         actions: [
           MaterialButton(
             onPressed: () {
+              if (_formKey.currentState!.validate()){
               ref.add({
                 'date':date,
                 'uid' :uid,
@@ -328,6 +108,7 @@ class _addreportState extends State<addreport> {
                 Navigator.pushReplacement(
                     context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
               });
+              }
             },
             child: Text(
               "Save",
@@ -337,24 +118,12 @@ class _addreportState extends State<addreport> {
               ),
             ),
           ),
-          /*MaterialButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => QuestionnaireScreen()));
-            },
-            child: Text(
-              "Back",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),*/
         ],
       ),
-      body: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
         child: Column(
-          children: [////////
+          children: [
             Padding(
             padding: const EdgeInsets.all(5),
             ),
@@ -366,12 +135,24 @@ class _addreportState extends State<addreport> {
                   height: 10,
                 ),
                 Container(
-                  //decoration: BoxDecoration(border: Border.all()),
-                  child: TextField(
+                  child: TextFormField(
                     controller: name,
                      decoration: InputDecoration(
-                         labelText: 'First Name',
+                         labelText: 'Full Name',
                 ),
+                    validator : (value)
+                    {
+                      if(value!.isEmpty)
+                      {
+                        print (value);
+                        return "Full Name is Empty!";
+                      }
+                      else
+                      {
+                        name.text=value;
+                        print(value);
+                      }
+                    },
                   ),
                 ),
 
@@ -887,19 +668,11 @@ class _addreportState extends State<addreport> {
             SizedBox(
               height: 50,
             ),
-
-
           ],
         ),
       ),
     );
   }
-
-
-
-
-
-
 
   void _showToast(String text) {
     _scaffoldKey.currentState!.showSnackBar(SnackBar(
@@ -925,15 +698,3 @@ class _GroupText extends StatelessWidget {
     );
   }
 }
-/*
-class _SpaceLine extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 5,
-      child: Container(
-        color: Colors.grey,
-      ),
-    );
-  }
-}*/

@@ -1,44 +1,15 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:project/main.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
-import '../../mainscreen.dart';
-/*
-class MyHomePage extends StatefulWidget {
-//MyHomePage({required Key key, required this.title}) : super(key: key);
-MyHomePage({Key? key, required this.title}) : super(key: key);
-final String title;
-@override
-_MyHomePageState createState() => _MyHomePageState();
-}
 
-class _MyHomePageState extends State<MyHomePage> {
+class supportMessage {
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   String? token = " ";
-
-  @override
-  void initState() {
-    super.initState();
-
-    requestPermission();
-
-    loadFCM();
-
-    listenFCM();
-
-    getToken();
-
-    FirebaseMessaging.instance.subscribeToTopic("Animal");
-
-    sendPushMessage();
-  }
 
   void sendPushMessage() async {
     try {
@@ -68,17 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print("error push notification");
     }
-  }
-
-  void getToken() async {
-    await FirebaseMessaging.instance.getToken().then(
-            (token) {
-          setState(() {
-            token = token;
-          });
-        }
-      //(token) => print(token)
-    );
   }
 
   void requestPermission() async {
@@ -116,8 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
               icon: 'launch_background',
             ),
           ),
@@ -136,18 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-      /// Create an Android Notification Channel.
-      ///
-      /// We use this channel in the `AndroidManifest.xml` file to override the
-      /// default FCM channel to enable heads up notifications.
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
-      /// Update the iOS foreground notification presentation options to allow
-      /// heads up notifications.
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
         alert: true,
@@ -157,54 +108,4 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-
-
-
-  /////
-  void customLaunch(command) async {
-    if (await canLaunch(command)) {
-      await launch(command);
-    } else {
-      print(' could not launch $command');
-    }
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-
-        title: Text("Email"),
-      ),
-      body: Center(
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-
-                RaisedButton(
-                  onPressed: () {
-                    customLaunch('mailto:your@email.com?subject=test%20subject&body=test%20body');
-                  },
-                  child: Text('Email'),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    customLaunch('sms:');
-                  },
-                  child: Text('SMS'),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-      // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
 }
-*/

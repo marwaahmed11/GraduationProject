@@ -1,19 +1,11 @@
-import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../../model/user_model.dart';
+import '../../supportmessage.dart';
 import '../helper/addhelper.dart';
 import '../helper/edithelper.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-
 
 class HelperScreen extends StatefulWidget {
   HelperScreen();
@@ -23,7 +15,7 @@ class HelperScreen extends StatefulWidget {
 
 class _HelperScreenState extends State<HelperScreen> {
 
-  final _formKey = GlobalKey<FormState>();
+
   _HelperScreenState();
   String uid='';
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -32,10 +24,7 @@ class _HelperScreenState extends State<HelperScreen> {
     uid = user!.uid;
   }
 
-  late AndroidNotificationChannel channel;
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  String? token = " ";
+  supportMessage message=new supportMessage();
 
   @override
   void initState() {
@@ -43,47 +32,17 @@ class _HelperScreenState extends State<HelperScreen> {
 
     getCurrentUser();
 
-    requestPermission();
+    message.requestPermission();
 
-    loadFCM();
+    message.loadFCM();
 
-    listenFCM();
+    message.listenFCM();
 
     getToken();
 
     FirebaseMessaging.instance.subscribeToTopic("Health");
 
-    sendPushMessage();
-  }
-
-  void sendPushMessage() async {
-    try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAAwyqJYMY:APA91bE_gBwYDgr9-puMHLyY6s5OTowlcv62FPi4XRdUqAPivmF8MX4TMtAzNifUwIDEn0CiqXcoJfglYpYcTqWnQbzXzqfd1JeBHlLQnnu1MHGEO6uovuKuzsI6ASKqGoeH5VwDJhyQ',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': 'Test Body',
-              'title': 'Test Title 2'
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done'
-            },
-            "to": "$token",
-          },
-        ),
-      );
-      print("heyyyyyyyyyyyyyyyyyyyy");
-    } catch (e) {
-      print("error push notification");
-    }
+    message.sendPushMessage();
   }
 
   void getToken() async {
@@ -93,80 +52,9 @@ class _HelperScreenState extends State<HelperScreen> {
             token = token;
           });
         }
-      //(token) => print(token)
+
     );
   }
-
-  void requestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
-
-  void listenFCM() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ),
-        );
-      }
-    });
-  }
-
-  void loadFCM() async {
-    if (!kIsWeb) {
-      channel = const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        importance: Importance.high,
-        enableVibration: true,
-      );
-
-      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
-
-
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    }
-  }
-  //widget.String.get(uid);
 
   final Stream<QuerySnapshot> _usersStream =
   FirebaseFirestore.instance.collection('helpers').snapshots();
@@ -243,12 +131,10 @@ class _HelperScreenState extends State<HelperScreen> {
                             width: double.infinity,
                           ),
                           Material(
-                            //padding: const EdgeInsets.all(8.0),
                             elevation: 20,
                             shadowColor: Colors.white38,
                             child: ListTile(
                               leading:Icon(Icons.account_circle_sharp) ,
-                              //trailing: Icon(Icons.arrow_forward_ios),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 side: BorderSide(

@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_questions/conditional_questions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:project/ui/authentication/login_screen.dart';
-import 'package:http/http.dart' as http;
+import '../../supportmessage.dart';
 import '../settings/edituser_screen.dart';
+import '../settings/help_screen.dart';
+
 
 Future<void> logout() async {
   await FirebaseAuth.instance.signOut();
@@ -24,6 +23,8 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
 
+  supportMessage message=new supportMessage();
+
   String uid='';
   final FirebaseAuth _auth = FirebaseAuth.instance;
   void getCurrentUser() async {
@@ -36,60 +37,21 @@ class _SettingPageState extends State<SettingPage> {
     super.initState();
     getCurrentUser();
 
-    requestPermission();
+    message.requestPermission();
 
-    loadFCM();
+    message.loadFCM();
 
-    listenFCM();
+    message.listenFCM();
 
     getToken();
 
     FirebaseMessaging.instance.subscribeToTopic("Health");
 
-    sendPushMessage();
+    message.sendPushMessage();
   }
-
-
 
   final Stream<QuerySnapshot> _usersStream =
   FirebaseFirestore.instance.collection('users').snapshots();
-
-  late AndroidNotificationChannel channel;
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  String? token = " ";
-
-
-
-  void sendPushMessage() async {
-    try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAAwyqJYMY:APA91bE_gBwYDgr9-puMHLyY6s5OTowlcv62FPi4XRdUqAPivmF8MX4TMtAzNifUwIDEn0CiqXcoJfglYpYcTqWnQbzXzqfd1JeBHlLQnnu1MHGEO6uovuKuzsI6ASKqGoeH5VwDJhyQ',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': 'Test Body',
-              'title': 'Test Title 2'
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done'
-            },
-            "to": "$token",
-          },
-        ),
-      );
-      print("heyyyyyyyyyyyyyyyyyyyy");
-    } catch (e) {
-      print("error push notification");
-    }
-  }
 
   void getToken() async {
     await FirebaseMessaging.instance.getToken().then(
@@ -98,88 +60,8 @@ class _SettingPageState extends State<SettingPage> {
             token = token;
           });
         }
-      //(token) => print(token)
     );
   }
-
-  void requestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
-
-  void listenFCM() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ),
-        );
-      }
-    });
-  }
-
-  void loadFCM() async {
-    if (!kIsWeb) {
-      channel = const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        importance: Importance.high,
-        enableVibration: true,
-      );
-
-      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-      /// Create an Android Notification Channel.
-      ///
-      /// We use this channel in the `AndroidManifest.xml` file to override the
-      /// default FCM channel to enable heads up notifications.
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
-
-      /// Update the iOS foreground notification presentation options to allow
-      /// heads up notifications.
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    }
-  }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -199,47 +81,8 @@ class _SettingPageState extends State<SettingPage> {
 
         ],
       ),
-     /* body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    logout();
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (_) => LoginScreen()));
-                  },
-                  child: Text('Log out'),
 
-                ),
-              /*  IconButton(
-                  icon: const Icon(Icons.login_outlined),
-                  onPressed: () {},
-                ),*/
-
-              ],
-            ),
-          /*  Column(
-              children: <Widget>[
-
-                RaisedButton(
-                  onPressed: () {
-                    logout();
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (_) => editUserScreen()));
-                  },
-                  child: Text('Edit your account info'),
-                ),
-              ],
-            ),*/
-          ],
-        ),
-      ),*/
       body: StreamBuilder(
-
-
         stream: _usersStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -277,23 +120,12 @@ class _SettingPageState extends State<SettingPage> {
                         SizedBox(
                           height: 4,
                         ),
+
                         Material(
-                         /* padding: EdgeInsets.only(
-                            left: 3,
-                            right: 3,
-                          ),*/
-                            elevation: 20,
-                            shadowColor: Colors.white38,
-                          child: ListTile(
-                           /* trailing: const Text(
-                              "Report",
-                              style: TextStyle(color: Colors.blueAccent, fontSize: 20),
-                            ),*/
+
+                            child: ListTile(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(
-                                color: Colors.white,
-                              ),
                             ),
                             title: Text(
                              "Manage your Account",
@@ -308,16 +140,36 @@ class _SettingPageState extends State<SettingPage> {
                           ),
 
                         ),
-                       /* RaisedButton(
+                        Divider(
+                          color: Colors.black12,
+                          thickness: 3,
+                        ),
+                        MaterialButton(
                           onPressed: () {
-                            logout();
                             Navigator.pushReplacement(
-                                context, MaterialPageRoute(builder: (_) => LoginScreen()));
+                                context, MaterialPageRoute(builder: (_) => HelpScreen()));
                           },
-                          child: Text('Log out',
-                          textAlign: TextAlign.center,
+
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            title: Text(
+                              "Help With This App",
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 16,
+                            ),
                           ),
-                        ),*/
+                        ),
+                        Divider(
+                          color: Colors.black12,
+                          thickness: 3,
+                        ),
                       ],
                     ),
                   );
@@ -344,12 +196,8 @@ class _SettingPageState extends State<SettingPage> {
         },
         icon: const Icon(Icons.logout),
         label: const Text('Logout'),
-      //  icon: const Icon(Icons.logout),
         backgroundColor: Colors.pink[200],
       ),
-
-
-
       // This trailing comma makes auto-formatting nicer for build methods.
     );
 

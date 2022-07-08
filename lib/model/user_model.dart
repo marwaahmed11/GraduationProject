@@ -9,7 +9,6 @@ class UserModel {
 
   UserModel({this.uid, this.email, this.firstName, this.secondName});
 
-  // receiving data from server
   factory UserModel.fromMap(map) {
     return UserModel(
       uid: map['uid'],
@@ -29,33 +28,6 @@ class UserModel {
     };
   }
 
-/*
-  Future<String?> addCollection( )async{
-    CollectionReference users=FirebaseFirestore.instance.collection('newuser');
-    var result = await users.add({
-      'uid':uid,
-      'email': email,
-      'firstName': firstName,
-      'secondName': secondName,
-
-    });
-    await addMultipleCollections (
-        id: result.id
-    );
-    return 'Created';
-  }
-
-  Future<String?> addMultipleCollections({String? id })async{
-
-    CollectionReference users=FirebaseFirestore.instance.collection('newuser');
-    users.doc(id).collection('helper').add({
-      'helperid':id,
-      //'Created_at' : DateTime.now()
-    });
-    return 'success';
-
-  }
-*/
 
 
 

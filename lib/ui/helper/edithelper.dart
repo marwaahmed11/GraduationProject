@@ -1,16 +1,11 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../report/report.dart';
+import '../../supportmessage.dart';
 import '../screens/helper_screen.dart';
-import 'package:http/http.dart' as http;
 import '../widgets/original_button.dart';
 
 class edithelper extends StatefulWidget {
@@ -24,6 +19,7 @@ class edithelper extends StatefulWidget {
 }
 
 class _edithelperState extends State<edithelper> {
+  final _formKey = GlobalKey<FormState>();
   DocumentSnapshot docid;
   String uid;
   _edithelperState({required this.docid,required this.uid});
@@ -31,11 +27,7 @@ class _edithelperState extends State<edithelper> {
   TextEditingController subject1 = TextEditingController();
   TextEditingController subject2 = TextEditingController();
 
-
-  late AndroidNotificationChannel channel;
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  String? token = " ";
+  supportMessage message=new supportMessage();
 
   @override
   void initState() {
@@ -46,47 +38,17 @@ class _edithelperState extends State<edithelper> {
     getlocation();
     super.initState();
 
-    requestPermission();
+    message.requestPermission();
 
-    loadFCM();
+    message.loadFCM();
 
-    listenFCM();
+    message.listenFCM();
 
     getToken();
 
     FirebaseMessaging.instance.subscribeToTopic("Health");
 
-    sendPushMessage();
-  }
-
-  void sendPushMessage() async {
-    try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAAwyqJYMY:APA91bE_gBwYDgr9-puMHLyY6s5OTowlcv62FPi4XRdUqAPivmF8MX4TMtAzNifUwIDEn0CiqXcoJfglYpYcTqWnQbzXzqfd1JeBHlLQnnu1MHGEO6uovuKuzsI6ASKqGoeH5VwDJhyQ',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': 'Test Body',
-              'title': 'Test Title 2'
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done'
-            },
-            "to": "$token",
-          },
-        ),
-      );
-      print("heyyyyyyyyyyyyyyyyyyyy");
-    } catch (e) {
-      print("error push notification");
-    }
+    message.sendPushMessage();
   }
 
   void getToken() async {
@@ -96,83 +58,9 @@ class _edithelperState extends State<edithelper> {
             token = token;
           });
         }
-      //(token) => print(token)
+
     );
   }
-
-  void requestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
-
-  void listenFCM() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ),
-        );
-      }
-    });
-  }
-
-  void loadFCM() async {
-    if (!kIsWeb) {
-      channel = const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        importance: Importance.high,
-        enableVibration: true,
-      );
-
-      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
-
-      /// Update the iOS foreground notification presentation options to allow
-      /// heads up notifications.
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    }
-  }
-
-
 
   String location = 'Null, Press Button';
   String Address = 'search';
@@ -212,12 +100,10 @@ class _edithelperState extends State<edithelper> {
   void getlocation() async {
     Position position = await _getGeoLocationPosition();
     location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
-   GetAddressFromLatLong(position) ;
-    //customLaunch('mailto:your@email.com?subject=test%20subject&body=test%20body');
-    //final url ='mailto:$toEmail?subject=$emergency&body=$Address';
+    GetAddressFromLatLong(position) ;
+
 
 }
-
 
   void customLaunch(command) async {
     if (await canLaunch(command)) {
@@ -231,16 +117,18 @@ class _edithelperState extends State<edithelper> {
     String message;
     if (value == 'save') {
       message = 'You selected save for $name2';
-      widget.docid.reference.update({
-        'firstname': name.text,
-        'lastname': subject1.text,
-        'number': subject2.text,
+      if (_formKey.currentState!.validate())
+        {
+        widget.docid.reference.update({
+          'firstname': name.text,
+          'lastname': subject1.text,
+          'number': subject2.text,
 
-      }).whenComplete(() {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => HelperScreen()));
-      });
-
+        }).whenComplete(() {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => HelperScreen()));
+        });
+    }//if
 
       // You can navigate the user to edit page.
     }
@@ -275,63 +163,6 @@ class _edithelperState extends State<edithelper> {
         title:Text('Confirm Helper'),
         automaticallyImplyLeading: false,
         actions: [
-         /* MaterialButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => HelperScreen()));
-            },
-            child: Text(
-              "Back",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),*/
-         /* MaterialButton(
-            onPressed: () {
-              widget.docid.reference.update({
-                'firstname': name.text,
-                'lastname': subject1.text,
-                'number': subject2.text,
-                'email': toEmail.text
-              }).whenComplete(() {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
-              });
-            },
-            child: Text(
-              "Save",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),*/
-          /*MaterialButton(
-            onPressed: () {
-              widget.docid.reference.delete().whenComplete(() {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HelperScreen()));
-              });
-            },
-
-            child: Text(
-              "Delete",
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 251, 251, 251),
-              ),
-            ),
-          ),*/
-         /* IconButton(
-            icon: const Icon(Icons.edit_rounded ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('edit')));
-            },
-          ),*/
-
           PopupMenuButton(
           itemBuilder: (context) {
             return [
@@ -353,7 +184,8 @@ class _edithelperState extends State<edithelper> {
               ],
 
       ),
-      body: SingleChildScrollView(
+      body: Form(
+        key:_formKey,
         child: Container(
           child: Column(
             children: [
@@ -361,39 +193,71 @@ class _edithelperState extends State<edithelper> {
                 height: 20,
               ),
               Container(
-                //decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
+                child: TextFormField(
                   controller: name,
                   decoration: InputDecoration(
                     hintText: 'First Name',
                   ),
+                  validator : (value)
+                  {
+                    if(value!.isEmpty)
+                    {
+                      return "First Name is Empty!";
+                    }
+                    else
+                    {
+                      name.text=value;
+                    }
+                  },
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
               Container(
-                //decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
+                child: TextFormField(
                   controller: subject1,
                   maxLines: null,
                   decoration: InputDecoration(
                     hintText: 'Last Name',
                   ),
+                  validator : (value)
+                  {
+                    if(value!.isEmpty)
+                    {
+                      print (value);
+                      return "Last Name is Empty!";
+                    }
+                    else
+                    {
+                      subject1.text=value;
+                      print(value);
+                    }
+                  },
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
               Container(
-               // decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
+                child: TextFormField(
                   controller: subject2,
                   maxLines: null,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     hintText: 'Number',
                   ),
+                  validator : (value)
+                  {
+                    if(value!.isEmpty || value.length<11)
+                    {
+                        return "Number is Empty! or less than 11 digit";
+                    }
+                    else
+                    {
+                      subject2.text=value;
+                    }
+                  },
                 ),
               ),
               SizedBox(
@@ -403,43 +267,9 @@ class _edithelperState extends State<edithelper> {
               SizedBox(
                 height: 20,
               ),
-              //Text('${Address}'),
-              /*ElevatedButton(
-                    onPressed: () async{
-                      getlocation();
-                      String number = subject2.text;
-                      String x = name.text+",please help me in this location "+Address;
-                      final url='sms:$number?body=$x';
-                      customLaunch(url);
-                    },
 
-                  child: Text('Send Location')),*/
-             /* Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.pink[200],
-
-                child: MaterialButton(
-
-                    padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                    // minWidth: MediaQuery.of(context).size.width,
-                    onPressed: () async {
-                      getlocation();
-                      String number = subject2.text;
-                      String x = name.text+",please help me in this location "+Address;
-                      final url='sms:$number?body=$x';
-                      customLaunch(url);
-
-                    },
-                    child: Text(
-                      "Send Location",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal),
-                    )),
-              ),*/
               SizedBox(
-                height: 200,
+                height: 150,
               ),
               Hero(
                 tag: 'logoAnimation',
@@ -463,34 +293,15 @@ class _edithelperState extends State<edithelper> {
                     String x = name.text+",please help me in this location "+Address;
                     final url='sms:$number?body=$x';
                     customLaunch(url);
-
                   },
                 ),
               ),
-
-              //Text('${Address}'),
             ],
           ),
         ),
       ),
-     /* floatingActionButton: FloatingActionButton.extended(
-
-        //  HomeScreen(),
-        label: Text("Send Location"),
-        //icon: Icon(Icons.add),
-        backgroundColor: Colors.pink[200],
-        onPressed: () {
-          getlocation();
-          String number = subject2.text;
-          String x = name.text+",please help me in this location "+Address;
-          final url='sms:$number?body=$x';
-          customLaunch(url);
-
-        },
-      ),*/
     );
   }
-
 }
 
 

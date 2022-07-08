@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:project/ui/authentication/registration_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:project/ui/authentication/resetpassword_screen.dart';
 import '../screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -86,12 +88,15 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-    //  color: Colors.blueAccent,
+      //  color: Colors.blueAccent,
       color: Colors.pink[200],
-     // color: Colors.pink,
+      // color: Colors.pink,
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery.of(context).size.width,
+          minWidth: MediaQuery
+              .of(context)
+              .size
+              .width,
           onPressed: () {
             signIn(emailController.text, passwordController.text);
           },
@@ -149,8 +154,33 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15),
                             ),
+
                           )
-                        ])
+                        ]),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Do you Forget Password? "),
+                          GestureDetector(
+                            onTap: () {
+                              //FutureresetPassword(email: emailController.text);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ResetScreen()));
+                            },
+                            child: Text(
+                              "Reset Password",
+                              style: TextStyle(
+                                  color: Colors.pink[300],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ),
+
+                          )
+                        ]),
+
                   ],
                 ),
               ),
@@ -167,7 +197,8 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
-            .then((uid) => {
+            .then((uid) =>
+        {
           Fluttertoast.showToast(msg: "Login Successful"),
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => HomeScreen())),
@@ -201,4 +232,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
+
+
+
+
+
+
 }

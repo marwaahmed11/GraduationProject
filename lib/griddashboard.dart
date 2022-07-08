@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project/main.dart';
-import 'package:project/ui/screens/email_screen.dart';
-import 'package:project/ui/screens/symptom_screen.dart';
-
 
 class GridDashboard extends StatelessWidget {
   Items item1 = new Items(
@@ -57,7 +53,6 @@ class GridDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     List<Items> myList = [item1,item2, item3,item4, item5,item6];
-    var color = 0xFF03A9F4;
 
     return Flexible(
 
@@ -70,20 +65,11 @@ class GridDashboard extends StatelessWidget {
           children: myList.map((data) {
             return GestureDetector(
              onTap: (){
-               /* Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => QuestionnairePage(title: '')//you can send parameters using constructor
-                    ));
-                //Are there another way to send parameters ? Yes !, Use RouteNames
-                Navigator.pushNamed(context, '/questionnaire');*/
                Navigator.pushNamed(context,data.screen);
 
               },
               child: Container(
                 decoration: BoxDecoration(
-                   // color: Color(color),
-                   //color: Colors.pinkAccent,
-                   //color: Colors.pink[300],
                     color: Colors.pink[200],
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
@@ -130,7 +116,6 @@ class GridDashboard extends StatelessWidget {
                 ),
               ),
             );
-
           }).toList()),
     );
   }
@@ -142,7 +127,6 @@ class Items {
   final String subtitle;
   final String event;
   final String img;
- // final BuildContext screen ;
   final String screen;
 
   const Items( {required this.title, required this.subtitle, required this.event ,required this.screen,required this.img});
