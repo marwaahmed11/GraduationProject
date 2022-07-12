@@ -12,14 +12,14 @@ class AccumlativeReport extends StatefulWidget {
   List<String> x;
   AccumlativeReport({required this.x});
   @override
-  State<AccumlativeReport> createState() => _reporttState(x:x);
+  State<AccumlativeReport> createState() => _reporttState(list:x);
 }
 
 class _reporttState extends State<AccumlativeReport> {
 
   String uid='';
-  List<String> x;
-  _reporttState({required this.x});
+  List<String> list;
+  _reporttState({required this.list});
   final pdf = pw.Document();
 
   supportMessage message=new supportMessage();
@@ -76,7 +76,7 @@ class _reporttState extends State<AccumlativeReport> {
 
     String? _logo = await rootBundle.loadString('assets/r2.svg');
 
-    for(int i=0;i<x.length;i++)
+    for(int i=0;i<list.length;i++)
       {
     doc.addPage(
         pw.MultiPage(
@@ -114,7 +114,7 @@ class _reporttState extends State<AccumlativeReport> {
                       mainAxisAlignment: pw.MainAxisAlignment.center,
                       children: [
                         pw.Text(
-                          x[i],
+                          list[i],
                           style: pw.TextStyle(
                             fontSize: 40,
                           ),

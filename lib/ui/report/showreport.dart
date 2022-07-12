@@ -22,6 +22,7 @@ class _showreportState extends State<showreport> {
   _showreportState({required this.docid,required this.uid});
   supportMessage message=new supportMessage();
 
+/*
   String name='';
   String subject1 ='';
   String subject2 ='';
@@ -33,25 +34,26 @@ class _showreportState extends State<showreport> {
   String subject8  ='';
   String subject9 ='' ;
   String subject10='';
-  String subject11='';
+  String subject11='';*/
+  List<String> subject = [];
   String date='';
 
 
   @override
   void initState() {
     date=widget.docid.get('date');
-    name = widget.docid.get('name');
-    subject1 =  widget.docid.get('question1');
-    subject2 =  widget.docid.get('question2');
-    subject3 =  widget.docid.get('question3');
-    subject4 =  widget.docid.get('question4');
-    subject5 =  widget.docid.get('question5');
-    subject6 =  widget.docid.get('question6');
-    subject7 =  widget.docid.get('question7');
-    subject8 =  widget.docid.get('question8');
-    subject9 =  widget.docid.get('question9');
-    subject10 = widget.docid.get('question10');
-    subject11 = widget.docid.get('question11');
+    subject.add(widget.docid.get('Name'));
+    subject.add(widget.docid.get('Hair_loss')); //hair loss
+    subject.add(widget.docid.get('Loss_of_appetite')); //loss of appetite
+    subject.add(widget.docid.get('Diarrhea')); //diarrhea
+    subject.add(widget.docid.get('Vomiting')); //vomiting
+    subject.add(widget.docid.get('Weight_loss')); //weight loss
+    subject.add(widget.docid.get('Changes_in_skin')); //changes in skin
+    subject.add(widget.docid.get('Ulcers_in_mouth')); //ulcers in mouth
+    subject.add(widget.docid.get('Vaginal_dryness')); //vaginal dryness
+    subject.add(widget.docid.get('Poor_memory')); //poor memory
+    subject.add(widget.docid.get('Anemia')); //anemia
+    subject.add(widget.docid.get('Nerve_damage')); //nerve damage
 
 
     super.initState();
@@ -171,7 +173,7 @@ class _showreportState extends State<showreport> {
             },
             onSelected: (String value){
               print('You Click on po up menu item');
-              actionPopUpItemSelected(value, name);
+              actionPopUpItemSelected(value, subject[0]);
             },
           ),
         ],
@@ -230,7 +232,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child: Text(
-                  name,
+                  subject[0],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -244,8 +246,8 @@ class _showreportState extends State<showreport> {
 
               Container(
                 child:  Text(
-                  "1- Do you suffer from hair loss?"
-                      "هل تعاني من فقدان سقوط الشعر؟",
+                  "1- Do you suffer from hair loss?"+"\n"+
+                      "هل تعاني من سقوط الشعر؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -260,7 +262,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject1,
+                  subject[1],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -273,7 +275,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "2- Do you suffer from loss of appetite?"
+                  "2- Do you suffer from loss of appetite?"+"\n"+
                       "هل تعاني من فقدان الشهية؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -290,7 +292,7 @@ class _showreportState extends State<showreport> {
                 ),),
 
                 child:  Text(
-                  subject2,
+                  subject[2],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -303,7 +305,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "3- Do you suffer from diarrhea?"
+                  "3- Do you suffer from diarrhea?"+"\n"+
                       "هل تعاني من الاسهال؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -318,7 +320,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject3,
+                  subject[3],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -330,7 +332,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "4- Do you suffer from vomiting?"
+                  "4- Do you suffer from vomiting?"+"\n"+
                       "هل تعاني من القئ؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -345,7 +347,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject4,
+                  subject[4],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -357,7 +359,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "5- Do you suffer from weight loss?"
+                  "5- Do you suffer from weight loss?"+"\n"+
                       "هل تعاني من فقدان الوزن؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -372,7 +374,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject5,
+                  subject[5],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -384,7 +386,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "6- Do you suffer from changes in the nails and skin?"
+                  "6- Do you suffer from changes in the nails and skin?"+"\n"+
                       "هل تعاني من تغيرات في الأظافر والجلد؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -399,7 +401,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject6,
+                  subject[6],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -411,7 +413,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "7- Do you suffer from changes in ulcers in the mouth?"
+                  "7- Do you suffer from changes in ulcers in the mouth?"+"\n"+
                       "هل تعاني من تغيرات تقرحات في الفم؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -426,7 +428,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject7,
+                  subject[7],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -438,7 +440,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "8- Do you suffer from vaginal dryness?"
+                  "8- Do you suffer from vaginal dryness?"+"\n"+
                       "هل تعاني من جفاف مهبلي؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -454,7 +456,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject8,
+                  subject[8],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -466,7 +468,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "9- Do you suffer from poor memory?"
+                  "9- Do you suffer from poor memory?"+"\n"+
                       "هل تعاني من ضعف في الذاكرة؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -481,7 +483,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject9,
+                  subject[9],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -493,7 +495,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "10- Do you suffer from anemia?"
+                  "10- Do you suffer from anemia?"+"\n"+
                       "هل تعاني من فقر الدم؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -508,7 +510,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject10,
+                  subject[10],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -520,7 +522,7 @@ class _showreportState extends State<showreport> {
               ),
               Container(
                 child:  Text(
-                  "11- Do you suffer from nerve damage?"
+                  "11- Do you suffer from nerve damage?"+"\n"+
                       "هل تعاني من تلف الاعصاب؟",
                   style: TextStyle(
                       color: Colors.black,
@@ -535,7 +537,7 @@ class _showreportState extends State<showreport> {
                   width: 1,
                 ),),
                 child:  Text(
-                  subject11,
+                  subject[11],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),

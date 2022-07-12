@@ -14,7 +14,7 @@ class _AccumlativeScreenState extends State<AccumlativeScreen> {
 
   String name ='';
   String uid='';
-  List <String>x=[];
+  List <String> list=[];
 
   supportMessage message=new supportMessage();
 
@@ -94,20 +94,20 @@ class _AccumlativeScreenState extends State<AccumlativeScreen> {
               itemCount: snapshot.data!.size,
               itemBuilder: (_, index) {
                 if (snapshot.data!.docs[index].get('uid') == uid) {
-                  x.add(
+                  list.add(
                       snapshot.data!.docChanges[index].doc['date']
-                          +'\n'+'Name: '+snapshot.data!.docChanges[index].doc['name']
-                          +'\n'+'Hair Loss: '+snapshot.data!.docChanges[index].doc['question1']
-                          +'\n'+'loss of appetite: '+snapshot.data!.docChanges[index].doc['question2']
-                          +'\n'+'diarrhea: '+snapshot.data!.docChanges[index].doc['question3']
-                          +'\n'+'vomiting: '+snapshot.data!.docChanges[index].doc['question4']
-                          +'\n'+'weight loss: '+snapshot.data!.docChanges[index].doc['question5']
-                          +'\n'+'changes in skin: '+snapshot.data!.docChanges[index].doc['question6']
-                          +'\n'+'ulcers in mouth: '+snapshot.data!.docChanges[index].doc['question7']
-                          +'\n'+'vaginal dryness: '+snapshot.data!.docChanges[index].doc['question8']
-                          +'\n'+'poor memory: '+snapshot.data!.docChanges[index].doc['question9']
-                          +'\n'+'anemia: '+snapshot.data!.docChanges[index].doc['question10']
-                          +'\n'+'nerve damage: '+snapshot.data!.docChanges[index].doc['question11']
+                          +'\n'+'Name: '+snapshot.data!.docChanges[index].doc['Name']
+                          +'\n'+'Hair Loss: '+snapshot.data!.docChanges[index].doc['Hair_loss']
+                          +'\n'+'loss of appetite: '+snapshot.data!.docChanges[index].doc['Loss_of_appetite']
+                          +'\n'+'diarrhea: '+snapshot.data!.docChanges[index].doc['Diarrhea']
+                          +'\n'+'vomiting: '+snapshot.data!.docChanges[index].doc['Vomiting']
+                          +'\n'+'weight loss: '+snapshot.data!.docChanges[index].doc['Weight_loss']
+                          +'\n'+'changes in skin: '+snapshot.data!.docChanges[index].doc['Changes_in_skin']
+                          +'\n'+'ulcers in mouth: '+snapshot.data!.docChanges[index].doc['Ulcers_in_mouth']
+                          +'\n'+'vaginal dryness: '+snapshot.data!.docChanges[index].doc['Vaginal_dryness']
+                          +'\n'+'poor memory: '+snapshot.data!.docChanges[index].doc['Poor_memory']
+                          +'\n'+'anemia: '+snapshot.data!.docChanges[index].doc['Anemia']
+                          +'\n'+'nerve damage: '+snapshot.data!.docChanges[index].doc['Nerve_damage']
                   );
                   return GestureDetector(
                     child: Column(
@@ -126,7 +126,7 @@ class _AccumlativeScreenState extends State<AccumlativeScreen> {
                               ),
                             ),
                             title: Text(
-                              snapshot.data!.docChanges[index].doc['date']
+                              /*snapshot.data!.docChanges[index].doc['date']
                                   +'\n'+'Name: '+snapshot.data!.docChanges[index].doc['name']
                                   +'\n'+'Hair Loss: '+snapshot.data!.docChanges[index].doc['question1']
                                   +'\n'+'loss of appetite: '+snapshot.data!.docChanges[index].doc['question2']
@@ -138,7 +138,8 @@ class _AccumlativeScreenState extends State<AccumlativeScreen> {
                                   +'\n'+'vaginal dryness: '+snapshot.data!.docChanges[index].doc['question8']
                                   +'\n'+'poor memory: '+snapshot.data!.docChanges[index].doc['question9']
                                   +'\n'+'anemia: '+snapshot.data!.docChanges[index].doc['question10']
-                                  +'\n'+'nerve damage: '+snapshot.data!.docChanges[index].doc['question11'],
+                                  +'\n'+'nerve damage: '+snapshot.data!.docChanges[index].doc['question11'],*/
+                              list[index],
 
                               style: TextStyle(
                                 fontSize: 20,
@@ -174,7 +175,7 @@ class _AccumlativeScreenState extends State<AccumlativeScreen> {
         backgroundColor: Colors.pink[200],
         onPressed: () {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) =>AccumlativeReport(x:x) ));
+              context, MaterialPageRoute(builder: (_) =>AccumlativeReport(x:list) ));
         },
       ),
     );

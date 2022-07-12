@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../supportmessage.dart';
 class AdviceScreen extends StatefulWidget {
   DocumentSnapshot docid;
   AdviceScreen({required this.docid});
@@ -12,109 +14,101 @@ class AdviceScreen extends StatefulWidget {
 
 class _advicepageState extends State<AdviceScreen> {
   DocumentSnapshot docid;
-
   _advicepageState({required this.docid});
 
-  var name;
-  var subject1;
-  var subject2;
-  var subject3;
-  var subject4;
-  var subject5;
-  var subject6;
-  var subject7;
-  var subject8;
-  var subject9;
-  var subject10;
-  var subject11;
-  List<String> x = [];
+  List<String> subject= [];
+  List<String> list = [];
 
   void initState() {
     setState(() {
-      name = widget.docid.get('name');
-      subject1 = widget.docid.get('question1'); //hair loss
-      subject2 = widget.docid.get('question2'); //loss of appetite
-      subject3 = widget.docid.get('question3'); //diarrhea
-      subject4 = widget.docid.get('question4'); //vomiting
-      subject5 = widget.docid.get('question5'); //weight loss
-      subject6 = widget.docid.get('question6'); //changes in skin
-      subject7 = widget.docid.get('question7'); //ulcers in mouth
-      subject8 = widget.docid.get('question8'); //vaginal dryness
-      subject9 = widget.docid.get('question9'); //poor memory
-      subject10 = widget.docid.get('question10'); //anemia
-      subject11 = widget.docid.get('question11'); //nerve damage
-
+      subject.add(widget.docid.get('Name'));
+      subject.add(widget.docid.get('Hair_loss')); //hair loss
+      subject.add(widget.docid.get('Loss_of_appetite')); //loss of appetite
+      subject.add(widget.docid.get('Diarrhea')); //diarrhea
+      subject.add(widget.docid.get('Vomiting')); //vomiting
+      subject.add(widget.docid.get('Weight_loss')); //weight loss
+      subject.add(widget.docid.get('Changes_in_skin')); //changes in skin
+      subject.add(widget.docid.get('Ulcers_in_mouth')); //ulcers in mouth
+      subject.add(widget.docid.get('Vaginal_dryness')); //vaginal dryness
+      subject.add(widget.docid.get('Poor_memory')); //poor memory
+      subject.add(widget.docid.get('Anemia')); //anemia
+      subject.add(widget.docid.get('Nerve_damage')); //nerve damage
     });
 
-    if (subject1 == 'None' || subject1 == '') {
-      subject1 = 'no';
-    }
-    else {
-      subject1 = 'yes';
-    }
-
-    if (subject2 == 'None' || subject2 == '') {
-      subject2 = 'no';
-    }
-    else
-      subject2 = 'yes';
-
-    if (subject3 == 'None' || subject3 == '') {
-      subject3 = 'no';
-    }
-    else
-      subject3 = 'yes';
-
-    if (subject4 == 'None' || subject4 == '') {
-      subject4 = 'no';
-    }
-    else
-      subject4 = 'yes';
-
-    if (subject5 == 'None' || subject5 == '') {
-      subject5 = 'no';
-    }
-    else
-      subject5 = 'yes';
-
-    if (subject6 == 'None' || subject6 == '') {
-      subject6 = 'no';
-    }
-    else
-      subject6 = 'yes';
-    if (subject7 == 'None' || subject7 == '') {
-      subject7 = 'no';
-    }
-    else
-      subject7 = 'yes';
-    if (subject8 == 'None' || subject8 == '') {
-      subject8 = 'no';
-    }
-    else
-      subject8 = 'yes';
-
-    if (subject9 == 'None' || subject9 == '') {
-      subject9 = 'no';
-    }
-    else
-      subject9 = 'yes';
-
-    if (subject10 == 'None' || subject10 == '') {
-      subject10 = 'no';
-    }
-    else
-      subject10 = 'yes';
+    analysis();
     super.initState();
   }
 
+  void analysis()
+  {
+    if (subject[1] == 'None' || subject[1] == '') {
+      subject[1] = 'no';
+    }
+    else {
+      subject[1] = 'yes';
+    }
+
+    if (subject[2] == 'None' || subject[2] == '') {
+      subject[2] = 'no';
+    }
+    else
+      subject[2] = 'yes';
+
+    if (subject[3] == 'None' || subject[3] == '') {
+      subject[3] = 'no';
+    }
+    else
+      subject[3] = 'yes';
+
+    if (subject[4] == 'None' || subject[4] == '') {
+      subject[4] = 'no';
+    }
+    else
+      subject[4] = 'yes';
+
+    if (subject[5] == 'None' || subject[5] == '') {
+      subject[5] = 'no';
+    }
+    else
+      subject[5] = 'yes';
+
+    if (subject[6] == 'None' || subject[6] == '') {
+      subject[6] = 'no';
+    }
+    else
+      subject[6] = 'yes';
+    if (subject[7]== 'None' || subject[7]== '') {
+      subject[7] = 'no';
+    }
+    else
+      subject[7] = 'yes';
+    if (subject[8] == 'None' || subject[8] == '') {
+      subject[8] = 'no';
+    }
+    else
+      subject[8] = 'yes';
+
+    if (subject[9] == 'None' || subject[9] == '') {
+      subject[9] = 'no';
+    }
+    else
+      subject[9] = 'yes';
+
+    if (subject[10]== 'None' || subject[10] == '') {
+      subject[10] = 'no';
+    }
+    else
+      subject[10] = 'yes';
+
+  }
 
   @override
   Widget build(BuildContext context) {
     advice();
-    if(x.length==0)
-      x.add('No Advice '+"\n"+"Please check with your Doctor"+'\n'+'لا يوجد نصيحة'+'\n'+'يرجى مراجعة طبيبك');
+    if(list.length==0)
+      list.add('No Advice '+"\n"+"Please check with your Doctor"+'\n'+'لا يوجد نصيحة'+'\n'+'يرجى مراجعة طبيبك');
 
-    final listMap = x.asMap();
+    final listMap = list.asMap();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[200],
@@ -127,14 +121,14 @@ class _advicepageState extends State<AdviceScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListView.builder(
-              itemCount: x.length,
+              itemCount: list.length,
               itemBuilder: (_, index) {
                 return GestureDetector(
                   child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
-                        child : Text( "This Advice should be under the supervision of your doctor ",
+                        child : Text( "This recommendation needs to be followed under your doctor's guidance.",
                           style: TextStyle(
                               color: Colors.white,
                               backgroundColor:Colors.orange,
@@ -177,45 +171,44 @@ class _advicepageState extends State<AdviceScreen> {
       ),
     );
   }
-
   void advice()  {
 
     //1
-    if(subject2=='yes'||subject5=='yes'){
-      x.add('Advice for Loss of Appetite and Weight Loss: '+'\n'+'Eat food containing these vitamins:'+'\n'+'Zinc, B12, B1'+'\n'
+    if(subject[2]=='yes'||subject[5]=='yes'){
+      list.add('Advice for Loss of Appetite and Weight Loss: '+'\n'+'Eat food containing these vitamins:'+'\n'+'Zinc, B12, B1'+'\n'
           +': نصائح لفقدان الشهية وفقدان الوزن*' + '\n' + ': تناول الأطعمة التي تحتوي على هذه الفيتامينات  ' + '\n' + 'الزنك ، ب 12 ، ب 1');
 
     }
-    if(subject3=='yes'){
-      x.add('Advice for Diarrhea: '+'\n'+'Should drink plenty of water, fluids, and foods rich in potassium and pectin. '
+    if(subject[3]=='yes'){
+      list.add('Advice for Diarrhea: '+'\n'+'Should drink plenty of water, fluids, and foods rich in potassium and pectin. '
           +'\n'+'Avoid fatty foods that contain sugar, caffeine, fiber and dairy products. '+'\n'
           ": نصيحة للإسهال*" + "\n" + "يجب شرب الكثير من الماء والسوائل والأطعمة الغنية بالبوتاسيوم والبكتين. "
           + '\n' + 'تجنب الأطعمة الدهنية التي تحتوي على السكر والكافيين والألياف ومنتجات الألبان. '
       );
     }
-    if(subject4=='yes'){
-      x.add('Advice for Vomiting: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B6'+'\n'+
+    if(subject[4]=='yes'){
+      list.add('Advice for Vomiting: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B6'+'\n'+
           ': نصائح للتقيؤ*' + '\n' + ': تناول الأطعمة التي تحتوي على هذه الفيتامينات' + '\n' + 'الزنك ، ب 6');
 
     }
-    if(subject7=='yes'){
-      x.add('Advice for Ulcers In Mouth: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B12, B6'+'\n'+'Mouthwash'+'\n'
+    if(subject[7]=='yes'){
+      list.add('Advice for Ulcers In Mouth: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B12, B6'+'\n'+'Mouthwash'+'\n'
           + ': نصيحة للقرحة في الفم*'+ '\n' + ': تناول الأطعمة التي تحتوي على هذه الفيتامينات ' + '\n' + ' ب 12، ب 6'+'\n'+'غسول الفم'
       );
 
     }
-    if(subject9=='yes'){
-      x.add('Advice for Poor Memory: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B12, E, D3, Omega 3'
+    if(subject[9]=='yes'){
+      list.add('Advice for Poor Memory: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B12, E, D3, Omega 3'
           +'\n' + 'نصيحة لضعف الذاكرة*'+ '\n' + ' : تناول الأطعمة التي تحتوي على هذه الفيتامينات' + '\n' + ' أوميغا 3، ه، ب 12، د 3');
 
     }
-    if(subject10=='yes'){
-      x.add('Advice for Anemia: '+'\n'+'Eat food containing these vitamins:'+'\n'+'Iron, B12, folic acid, C'+'\n'+'Please Check with your doctor'
+    if(subject[10]=='yes'){
+      list.add('Advice for Anemia: '+'\n'+'Eat food containing these vitamins:'+'\n'+'Iron, B12, folic acid, C'+'\n'+'Please Check with your doctor'
           +'\n' + ': نصائح لفقر الدم*'+ '\n' + ': تناول الأطعمة التي تحتوي على هذه الفيتامينات' + '\n' + 'الحديد ، ب 12 ، حمض الفوليك ،ج'
           +'\n'+'يرجى مراجعة طبيبك');
     }
-    if(subject11=='yes'){
-      x.add('Advice for Nerve Damage: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B12, Omega 3, B1, B2, B6'
+    if(subject[11]=='yes'){
+      list.add('Advice for Nerve Damage: '+'\n'+'Eat food containing these vitamins:'+'\n'+'B12, Omega 3, B1, B2, B6'
           +'\n'+': نصائح لتلف العصب*'+ '\n' + ': تناول الأطعمة التي تحتوي على هذه الفيتامينات' + '\n' + ' ب 12، ب 1، ب 2، ب3، ب 6، أوميغا 3' );
 
     }

@@ -91,18 +91,18 @@ class _addreportState extends State<addreport> {
               ref.add({
                 'date':date,
                 'uid' :uid,
-                'name':  name.text,
-                'question1': _radioBoxValue1,
-                'question2': _radioBoxValue2,
-                'question3': _radioBoxValue3,
-                'question4': _radioBoxValue4,
-                'question5':_radioBoxValue5,
-                'question6': _radioBoxValue6,
-                'question7': _radioBoxValue7,
-                'question8': _radioBoxValue8,
-                'question9': _radioBoxValue9,
-                'question10': _radioBoxValue10,
-                'question11': _radioBoxValue11
+                'Name':  name.text,
+                'Hair_loss': _radioBoxValue1,
+                'Loss_of_appetite': _radioBoxValue2,
+                'Diarrhea': _radioBoxValue3,
+                'Vomiting': _radioBoxValue4,
+                'Weight_loss':_radioBoxValue5,
+                'Changes_in_skin': _radioBoxValue6,
+                'Ulcers_in_mouth': _radioBoxValue7,
+                'Vaginal_dryness': _radioBoxValue8,
+                'Poor_memory': _radioBoxValue9,
+                'Anemia': _radioBoxValue10,
+                'Nerve_damage': _radioBoxValue11
 
               }).whenComplete(() {
                 Navigator.pushReplacement(
@@ -162,8 +162,8 @@ class _addreportState extends State<addreport> {
                 ),
 
 
-                _GroupText("1- Do you suffer from hair loss?"
-                    "هل تعاني من فقدان سقوط الشعر؟"),
+                _GroupText("1- Do you suffer from hair loss?"+"\n"+
+                    "هل تعاني من سقوط الشعر؟"),
 
                 RadioListTile(
                     title: const Text('None'),
@@ -209,7 +209,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("2- Do you suffer from loss of appetite?"
+                _GroupText("2- Do you suffer from loss of appetite?"+"\n"+
                     "هل تعاني من فقدان الشهية؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -255,7 +255,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText( "3- Do you suffer from diarrhea?"
+                _GroupText( "3- Do you suffer from diarrhea?"+"\n"+
                     "هل تعاني من الاسهال؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -301,7 +301,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("4- Do you suffer from vomiting?"
+                _GroupText("4- Do you suffer from vomiting?"+"\n"+
                     "هل تعاني من القئ؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -347,7 +347,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("5- Do you suffer from weight loss?"
+                _GroupText("5- Do you suffer from weight loss?"+"\n"+
                     "هل تعاني من فقدان الوزن؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -393,7 +393,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("6- Do you suffer from changes in the nails and skin?"
+                _GroupText("6- Do you suffer from changes in the nails and skin?"+"\n"+
                     "هل تعاني من تغيرات في الأظافر والجلد؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -439,7 +439,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("7- Do you suffer from changes in ulcers in the mouth?"
+                _GroupText("7- Do you suffer from changes in ulcers in the mouth?"+"\n"+
                     "هل تعاني من تغيرات تقرحات في الفم؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -485,7 +485,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("8- Do you suffer from vaginal dryness?"
+                _GroupText("8- Do you suffer from vaginal dryness?"+"\n"+
                     "هل تعاني من جفاف مهبلي؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -531,7 +531,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText( "9- Do you suffer from poor memory?"
+                _GroupText( "9- Do you suffer from poor memory?"+"\n"+
                     "هل تعاني من ضعف في الذاكرة؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -577,7 +577,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("10- Do you suffer from anemia?"
+                _GroupText("10- Do you suffer from anemia?"+"\n"+
                     "هل تعاني من فقر الدم؟"),
                 RadioListTile(
                     title: const Text('None'),
@@ -626,7 +626,7 @@ class _addreportState extends State<addreport> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _GroupText("11- Do you suffer from nerve damage?"
+                _GroupText("11- Do you suffer from nerve damage?"+"\n"+
                     "هل تعاني من تلف الاعصاب؟"),
                 RadioListTile(
                     title: const Text('None'),

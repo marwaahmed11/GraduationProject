@@ -29,7 +29,7 @@ class _reporttState extends State<reportt> {
   _reporttState({required this.docid,required this.uid});
   final pdf = pw.Document();
   var date;
-  var name;
+  /*var name;
   var subject1;
   var subject2;
   var subject3;
@@ -40,8 +40,8 @@ class _reporttState extends State<reportt> {
   var subject8;
   var subject9;
   var subject10;
-  var subject11;
-
+  var subject11;*/
+  List<String> subject = [];
   supportMessage message=new supportMessage();
 
   @override
@@ -50,19 +50,18 @@ class _reporttState extends State<reportt> {
     setState(() {
       date=widget.docid.get('date');
       uid= widget.docid.get('uid');
-      name = widget.docid.get('name');
-      subject1 = widget.docid.get('question1');
-      subject2 = widget.docid.get('question2');
-      subject3 = widget.docid.get('question3');
-      subject4 = widget.docid.get('question4');
-      subject5 = widget.docid.get('question5');
-      subject6 = widget.docid.get('question6');
-      subject7 = widget.docid.get('question7');
-      subject8 = widget.docid.get('question8');
-      subject9 = widget.docid.get('question9');
-      subject10 = widget.docid.get('question10');
-      subject11 = widget.docid.get('question11');
-
+      subject.add(widget.docid.get('Name'));
+      subject.add(widget.docid.get('Hair_loss')); //hair loss
+      subject.add(widget.docid.get('Loss_of_appetite')); //loss of appetite
+      subject.add(widget.docid.get('Diarrhea')); //diarrhea
+      subject.add(widget.docid.get('Vomiting')); //vomiting
+      subject.add(widget.docid.get('Weight_loss')); //weight loss
+      subject.add(widget.docid.get('Changes_in_skin')); //changes in skin
+      subject.add(widget.docid.get('Ulcers_in_mouth')); //ulcers in mouth
+      subject.add(widget.docid.get('Vaginal_dryness')); //vaginal dryness
+      subject.add(widget.docid.get('Poor_memory')); //poor memory
+      subject.add(widget.docid.get('Anemia')); //anemia
+      subject.add(widget.docid.get('Nerve_damage')); //nerve damage
     });
     super.initState();
     getCurrentUser();
@@ -173,7 +172,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            name,
+                            subject[0],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -190,7 +189,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject1,
+                            subject[1],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -207,7 +206,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject2,
+                            subject[2],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -224,7 +223,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject3,
+                            subject[3],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -241,7 +240,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject4,
+                            subject[4],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -258,7 +257,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject5,
+                            subject[5],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -275,7 +274,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject6,
+                            subject[6],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -292,7 +291,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject7,
+                            subject[7],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -309,7 +308,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject8,
+                            subject[8],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -326,7 +325,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject9,
+                            subject[9],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -343,7 +342,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject10,
+                            subject[10],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
@@ -360,7 +359,7 @@ class _reporttState extends State<reportt> {
                             ),
                           ),
                           pw.Text(
-                            subject11,
+                            subject[11],
                             style: pw.TextStyle(
                               fontSize: 40,
                             ),
