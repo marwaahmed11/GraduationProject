@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../supportmessage.dart';
+import '../screens/event_screen.dart';
 import 'addevent_screen.dart';
 
 class Calendar extends StatefulWidget {
@@ -76,6 +77,13 @@ class _CalendarState extends State<Calendar> {
       appBar: AppBar(
         title: Text("Calendar"),
         backgroundColor: Colors.pink[200],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ListEventScreen()));
+
+          },
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add_alert),

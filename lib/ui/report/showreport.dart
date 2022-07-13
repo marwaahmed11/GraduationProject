@@ -246,7 +246,7 @@ class _showreportState extends State<showreport> {
 
               Container(
                 child:  Text("1- Do you suffer from hair loss?                      "+"\n"
-                    +"                                   هل تعاني من سقوط الشعر؟ ",
+                    +"                               هل تعاني من سقوط الشعر؟ ",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -275,7 +275,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "2- Do you suffer from loss of appetite?         "+"\n"+
-                      "                                  هل تعاني من فقدان الشهية؟",
+                      "                              هل تعاني من فقدان الشهية؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -305,7 +305,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "3- Do you suffer from diarrhea?                      "+"\n"+
-                      "                                           هل تعاني من الاسهال؟",
+                      "                                      هل تعاني من الاسهال؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -332,7 +332,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "4- Do you suffer from vomiting?                      "+"\n"+
-                      "                                              هل تعاني من القئ؟",
+                      "                                           هل تعاني من القئ؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -359,7 +359,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "5- Do you suffer from weight loss?                  "+"\n"+
-                      "                                   هل تعاني من فقدان الوزن؟",
+                      "                                هل تعاني من فقدان الوزن؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -386,7 +386,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "6- Do you suffer from changes in the nails and skin?"+"\n"+
-                      "                 هل تعاني من تغيرات في الاظافر و الجلد؟",
+                      "            هل تعاني من تغيرات في الاظافر و الجلد؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -413,7 +413,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "7- Do you suffer from changes in ulcers in the mouth?"+"\n"+
-                      "                    هل تعاني من تغيرات تقرحات في الفم؟",
+                      "                هل تعاني من تغيرات تقرحات في الفم؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -440,7 +440,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "8- Do you suffer from vaginal dryness?         "+"\n"+
-                      "                                    هل تعاني من جفاف مهبلي؟",
+                      "                               هل تعاني من جفاف مهبلي؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -468,7 +468,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "9- Do you suffer from poor memory?             "+"\n"+
-                      "                              هل تعاني من ضعف في الذاكرة؟",
+                      "                         هل تعاني من ضعف في الذاكرة؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -495,7 +495,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "10- Do you suffer from anemia?                     "+"\n"+
-                      "                                          هل تعاني من فقر الدم؟",
+                      "                                     هل تعاني من فقر الدم؟",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20),
@@ -522,7 +522,7 @@ class _showreportState extends State<showreport> {
               Container(
                 child:  Text(
                   "11- Do you suffer from nerve damage?        "+"\n"+
-                      "                                  هل تعاني من تلف الاعصاب؟"
+                      "                             هل تعاني من تلف الاعصاب؟"
                      ,
                   style: TextStyle(
                       color: Colors.black,
